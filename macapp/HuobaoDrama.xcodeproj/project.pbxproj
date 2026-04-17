@@ -11,6 +11,42 @@
 		AA000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100002 /* ContentView.swift */; };
 		AA000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA100003 /* Assets.xcassets */; };
 		AA000004 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA100004 /* Preview Assets.xcassets */; };
+		AA000005 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100005 /* Router.swift */; };
+		AA000006 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100006 /* APIResponse.swift */; };
+		AA000007 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100007 /* Enums.swift */; };
+		AA000008 /* Drama.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100008 /* Drama.swift */; };
+		AA000009 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100009 /* Episode.swift */; };
+		AA000010 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100010 /* Character.swift */; };
+		AA000011 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100011 /* Scene.swift */; };
+		AA000012 /* Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100012 /* Storyboard.swift */; };
+		AA000013 /* AIServiceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100013 /* AIServiceConfig.swift */; };
+		AA000014 /* AgentConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100014 /* AgentConfig.swift */; };
+		AA000015 /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100015 /* Skill.swift */; };
+		AA000016 /* VoiceProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100016 /* VoiceProfile.swift */; };
+		AA000017 /* RequestTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100017 /* RequestTypes.swift */; };
+		AA000018 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100018 /* APIClient.swift */; };
+		AA000019 /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100019 /* APIEndpoints.swift */; };
+		AA000020 /* ConnectionSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100020 /* ConnectionSettingsStore.swift */; };
+		AA000021 /* PollingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100021 /* PollingCoordinator.swift */; };
+		AA000022 /* DownloadExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100022 /* DownloadExportService.swift */; };
+		AA000023 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100023 /* Colors.swift */; };
+		AA000024 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100024 /* Typography.swift */; };
+		AA000025 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100025 /* DesignTokens.swift */; };
+		AA000026 /* Shadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100026 /* Shadows.swift */; };
+		AA000027 /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100027 /* ViewModifiers.swift */; };
+		AA000028 /* SearchablePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100028 /* SearchablePicker.swift */; };
+		AA000029 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100029 /* CardView.swift */; };
+		AA000030 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100030 /* TagView.swift */; };
+		AA000031 /* StatusDot.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100031 /* StatusDot.swift */; };
+		AA000032 /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100032 /* LoadingOverlay.swift */; };
+		AA000033 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100033 /* EmptyStateView.swift */; };
+		AA000034 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100034 /* ImageViewer.swift */; };
+		AA000035 /* AudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100035 /* AudioPlayerView.swift */; };
+		AA000036 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100036 /* VideoPlayerView.swift */; };
+		AA000037 /* StepBubbleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100037 /* StepBubbleBar.swift */; };
+		AA000038 /* ModalSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100038 /* ModalSheet.swift */; };
+		AA000039 /* ModelDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100039 /* ModelDecodingTests.swift */; };
+		AA000040 /* HuobaoDrama.app in Frameworks */ = {isa = PBXBuildFile; fileRef = AA100000 /* HuobaoDrama.app */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +55,42 @@
 		AA100002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AA100003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA100004 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		AA100005 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		AA100006 /* APIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
+		AA100007 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		AA100008 /* Drama.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drama.swift; sourceTree = "<group>"; };
+		AA100009 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
+		AA100010 /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
+		AA100011 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
+		AA100012 /* Storyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboard.swift; sourceTree = "<group>"; };
+		AA100013 /* AIServiceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIServiceConfig.swift; sourceTree = "<group>"; };
+		AA100014 /* AgentConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentConfig.swift; sourceTree = "<group>"; };
+		AA100015 /* Skill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Skill.swift; sourceTree = "<group>"; };
+		AA100016 /* VoiceProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceProfile.swift; sourceTree = "<group>"; };
+		AA100017 /* RequestTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestTypes.swift; sourceTree = "<group>"; };
+		AA100018 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		AA100019 /* APIEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEndpoints.swift; sourceTree = "<group>"; };
+		AA100020 /* ConnectionSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSettingsStore.swift; sourceTree = "<group>"; };
+		AA100021 /* PollingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollingCoordinator.swift; sourceTree = "<group>"; };
+		AA100022 /* DownloadExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadExportService.swift; sourceTree = "<group>"; };
+		AA100023 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		AA100024 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		AA100025 /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
+		AA100026 /* Shadows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shadows.swift; sourceTree = "<group>"; };
+		AA100027 /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
+		AA100028 /* SearchablePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchablePicker.swift; sourceTree = "<group>"; };
+		AA100029 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		AA100030 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
+		AA100031 /* StatusDot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusDot.swift; sourceTree = "<group>"; };
+		AA100032 /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
+		AA100033 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		AA100034 /* ImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
+		AA100035 /* AudioPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerView.swift; sourceTree = "<group>"; };
+		AA100036 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		AA100037 /* StepBubbleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepBubbleBar.swift; sourceTree = "<group>"; };
+		AA100038 /* ModalSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalSheet.swift; sourceTree = "<group>"; };
+		AA100039 /* ModelDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDecodingTests.swift; sourceTree = "<group>"; };
+		AA100050 /* HuobaoDramaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HuobaoDramaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,6 +98,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA200010 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000040 /* HuobaoDrama.app in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,14 +119,20 @@
 				AA100002 /* ContentView.swift */,
 				AA100003 /* Assets.xcassets */,
 				AA300002 /* Preview Content */,
+				AA300010 /* App */,
+				AA300011 /* Models */,
+				AA300012 /* Services */,
+				AA300013 /* DesignSystem */,
+				AA300014 /* Views */,
 			);
-			path = HuobaoDrama;
+			path = HuobaoDrama/HuobaoDrama;
 			sourceTree = "<group>";
 		};
 		AA300001 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				AA100000 /* HuobaoDrama.app */,
+				AA100050 /* HuobaoDramaTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -64,8 +150,94 @@
 			isa = PBXGroup;
 			children = (
 				AA300000 /* HuobaoDrama */,
+				AA300016 /* HuobaoDramaTests */,
 				AA300001 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		AA300010 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AA100005 /* Router.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AA300011 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA100006 /* APIResponse.swift */,
+				AA100007 /* Enums.swift */,
+				AA100008 /* Drama.swift */,
+				AA100009 /* Episode.swift */,
+				AA100010 /* Character.swift */,
+				AA100011 /* Scene.swift */,
+				AA100012 /* Storyboard.swift */,
+				AA100013 /* AIServiceConfig.swift */,
+				AA100014 /* AgentConfig.swift */,
+				AA100015 /* Skill.swift */,
+				AA100016 /* VoiceProfile.swift */,
+				AA100017 /* RequestTypes.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AA300012 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA100018 /* APIClient.swift */,
+				AA100019 /* APIEndpoints.swift */,
+				AA100020 /* ConnectionSettingsStore.swift */,
+				AA100021 /* PollingCoordinator.swift */,
+				AA100022 /* DownloadExportService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AA300013 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				AA100023 /* Colors.swift */,
+				AA100024 /* Typography.swift */,
+				AA100025 /* DesignTokens.swift */,
+				AA100026 /* Shadows.swift */,
+				AA100027 /* ViewModifiers.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		AA300014 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA300015 /* Common */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AA300015 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				AA100028 /* SearchablePicker.swift */,
+				AA100029 /* CardView.swift */,
+				AA100030 /* TagView.swift */,
+				AA100031 /* StatusDot.swift */,
+				AA100032 /* LoadingOverlay.swift */,
+				AA100033 /* EmptyStateView.swift */,
+				AA100034 /* ImageViewer.swift */,
+				AA100035 /* AudioPlayerView.swift */,
+				AA100036 /* VideoPlayerView.swift */,
+				AA100037 /* StepBubbleBar.swift */,
+				AA100038 /* ModalSheet.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		AA300016 /* HuobaoDramaTests */ = {
+			isa = PBXGroup;
+			children = (
+				AA100039 /* ModelDecodingTests.swift */,
+			);
+			path = HuobaoDrama/HuobaoDramaTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -88,6 +260,23 @@
 			productReference = AA100000 /* HuobaoDrama.app */;
 			productType = "com.apple.product-type.application";
 		};
+		AA400001 /* HuobaoDramaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA500010 /* Build configuration list for PBXNativeTarget "HuobaoDramaTests" */;
+			buildPhases = (
+				AA200010 /* Frameworks */,
+				AA200011 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA800000 /* PBXTargetDependency */,
+			);
+			name = HuobaoDramaTests;
+			productName = HuobaoDramaTests;
+			productReference = AA100050 /* HuobaoDramaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -100,6 +289,10 @@
 				TargetAttributes = {
 					AA400000 = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					AA400001 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = AA400000;
 					};
 				};
 			};
@@ -118,6 +311,7 @@
 			projectRoot = "";
 			targets = (
 				AA400000 /* HuobaoDrama */,
+				AA400001 /* HuobaoDramaTests */,
 			);
 		};
 /* End PBXProject section */
@@ -139,12 +333,72 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA000002 /* ContentView.swift in Sources */,
 				AA000001 /* HuobaoDramaApp.swift in Sources */,
+				AA000002 /* ContentView.swift in Sources */,
+				AA000005 /* Router.swift in Sources */,
+				AA000006 /* APIResponse.swift in Sources */,
+				AA000007 /* Enums.swift in Sources */,
+				AA000008 /* Drama.swift in Sources */,
+				AA000009 /* Episode.swift in Sources */,
+				AA000010 /* Character.swift in Sources */,
+				AA000011 /* Scene.swift in Sources */,
+				AA000012 /* Storyboard.swift in Sources */,
+				AA000013 /* AIServiceConfig.swift in Sources */,
+				AA000014 /* AgentConfig.swift in Sources */,
+				AA000015 /* Skill.swift in Sources */,
+				AA000016 /* VoiceProfile.swift in Sources */,
+				AA000017 /* RequestTypes.swift in Sources */,
+				AA000018 /* APIClient.swift in Sources */,
+				AA000019 /* APIEndpoints.swift in Sources */,
+				AA000020 /* ConnectionSettingsStore.swift in Sources */,
+				AA000021 /* PollingCoordinator.swift in Sources */,
+				AA000022 /* DownloadExportService.swift in Sources */,
+				AA000023 /* Colors.swift in Sources */,
+				AA000024 /* Typography.swift in Sources */,
+				AA000025 /* DesignTokens.swift in Sources */,
+				AA000026 /* Shadows.swift in Sources */,
+				AA000027 /* ViewModifiers.swift in Sources */,
+				AA000028 /* SearchablePicker.swift in Sources */,
+				AA000029 /* CardView.swift in Sources */,
+				AA000030 /* TagView.swift in Sources */,
+				AA000031 /* StatusDot.swift in Sources */,
+				AA000032 /* LoadingOverlay.swift in Sources */,
+				AA000033 /* EmptyStateView.swift in Sources */,
+				AA000034 /* ImageViewer.swift in Sources */,
+				AA000035 /* AudioPlayerView.swift in Sources */,
+				AA000036 /* VideoPlayerView.swift in Sources */,
+				AA000037 /* StepBubbleBar.swift in Sources */,
+				AA000038 /* ModalSheet.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA200011 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000039 /* ModelDecodingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA800000 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA400000 /* HuobaoDrama */;
+			targetProxy = AA810000 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXContainerItemProxy section */
+		AA810000 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA600000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA400000;
+			remoteInfo = HuobaoDrama;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin XCBuildConfiguration section */
 		AA700000 /* Debug */ = {
@@ -273,7 +527,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"HuobaoDrama/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"HuobaoDrama/HuobaoDrama/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -300,7 +554,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"HuobaoDrama/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"HuobaoDrama/HuobaoDrama/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -315,6 +569,40 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		AA700010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.huobao.drama.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HuobaoDrama.app/Contents/MacOS/HuobaoDrama";
+			};
+			name = Debug;
+		};
+		AA700011 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.huobao.drama.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HuobaoDrama.app/Contents/MacOS/HuobaoDrama";
 			};
 			name = Release;
 		};
@@ -335,6 +623,15 @@
 			buildConfigurations = (
 				AA700002 /* Debug */,
 				AA700003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA500010 /* Build configuration list for PBXNativeTarget "HuobaoDramaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA700010 /* Debug */,
+				AA700011 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
