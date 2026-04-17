@@ -135,14 +135,18 @@
 
 ### Phase 1 Acceptance Criteria
 
-- [ ] Go module compiles and starts
-- [ ] PostgreSQL connection + migrations work
-- [ ] All basic CRUD endpoints return correct JSON responses
-- [ ] Unified response format `{code, data, message}` matches TS version
-- [ ] Middleware (logging, CORS, error handler) active
-- [ ] Health check endpoint returns 200
-- [ ] Static file serving works
-- [ ] SPA fallback works
+> **注**：Phase 1 实际落地使用 SQLite（GORM + WAL 模式），不是 PostgreSQL。
+> PostgreSQL 迁移留到 Phase 7（数据迁移工具 + 灰度切换）。
+
+- [x] Go module compiles and starts
+- [x] SQLite connection + GORM AutoMigrate（17 张表）work
+- [x] All basic CRUD endpoints return correct JSON responses
+- [x] Unified response format `{code, data, message}` matches TS version
+- [x] Middleware (CORS, error handler via gin.Recovery()) active
+- [x] Health check endpoint returns 200
+- [x] Static file serving works (`/static/*` → `data/storage/`)
+- [x] SPA fallback works
+- [ ] Custom request logger (当前使用 gin.Logger()，自定义版本待 Phase 1 收尾实现)
 
 ---
 
@@ -685,4 +689,5 @@ The following tasks can be worked on simultaneously by different agents/threads:
 
 | Date | Phase | Task ID | Status | Notes |
 |------|-------|---------|--------|-------|
-| _auto_ | — | — | — | Plan created |
+| 2026-04-18 | 1 | 1.1–1.6 | ✅ 基本完成 | 核心 CRUD / 中间件 / 工具落地；SQLite WAL + AutoMigrate；query helpers / HTTP util / 自定义 logger 待补 |
+| 2026-04-18 | 2 | — | 🔜 准备启动 | AI Provider Adapter Layer；需先补 `internal/util/http.go` |

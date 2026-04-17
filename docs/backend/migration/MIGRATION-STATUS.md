@@ -91,19 +91,21 @@
   - 对应 Go 落地文件
   - 如有需要，再回填 `MIGRATION-PLAN.md` 的勾选状态
 
-### 下一批应启动的任务（Phase 2）
+### 下一步执行顺序
+
+**第一步：收尾 Phase 1 遗留（建议先做，为 Phase 2 打底）**
+
+1. `internal/util/http.go` — HTTP 请求工具（Phase 2 adapter 必须依赖）
+2. `internal/database/queries.go` — 抽取公共查询逻辑（减少 handler 内联重复）
+3. 自定义 request logger 中间件（替换 gin.Logger()）
+
+**第二步：启动 Phase 2 — AI Provider Adapter Layer**
 
 1. AI Provider adapter 类型定义和核心接口（`internal/adapter/types.go`）
 2. URL builder 和 registry（`internal/adapter/url_builder.go`、`registry.go`）
 3. 按 provider 并行实现 image adapter（MiniMax、OpenAI、Gemini、VolcEngine、Ali、Chatfire）
 4. 按 provider 并行实现 video adapter（MiniMax、VolcEngine、Vidu、Ali）
 5. 实现 MiniMax TTS adapter
-
-### 后续补齐 Phase 1 遗留
-
-- `internal/database/queries.go` — 抽取公共查询逻辑
-- `internal/util/http.go` — HTTP 请求工具（为 Phase 2 adapter 准备）
-- 自定义 request logger 中间件（替换 gin.Logger()）
 
 ## 5. 执行清单
 
