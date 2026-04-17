@@ -7,9 +7,14 @@ dist/
 # IDE
 .idea/
 .vscode/
+.claude/
 *.swp
 *.swo
 *~
+*.xcuserstate
+*.xcscmblueprint
+**/xcuserdata/
+**/*.xcuserdatad/
 
 # Environment
 .env
