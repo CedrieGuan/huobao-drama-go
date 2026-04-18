@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E217C032F93AFD100C7905D /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E217C012F93AFD100C7905D /* SettingsViewModel.swift */; };
+		1E217C042F93AFD100C7905D /* DramaListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E217C002F93AFD100C7905D /* DramaListViewModel.swift */; };
 		AA000001 /* HuobaoDramaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100001 /* HuobaoDramaApp.swift */; };
 		AA000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100002 /* ContentView.swift */; };
 		AA000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA100003 /* Assets.xcassets */; };
@@ -49,7 +51,19 @@
 		AA000040 /* HuobaoDrama.app in Frameworks */ = {isa = PBXBuildFile; fileRef = AA100000 /* HuobaoDrama.app */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		AA810000 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA600000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA400000;
+			remoteInfo = HuobaoDrama;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		1E217C002F93AFD100C7905D /* DramaListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DramaListViewModel.swift; sourceTree = "<group>"; };
+		1E217C012F93AFD100C7905D /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		AA100000 /* HuobaoDrama.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HuobaoDrama.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA100001 /* HuobaoDramaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HuobaoDramaApp.swift; sourceTree = "<group>"; };
 		AA100002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -112,12 +126,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AA300000 /* HuobaoDrama */ = {
+		1E217C022F93AFD100C7905D /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				1E217C002F93AFD100C7905D /* DramaListViewModel.swift */,
+				1E217C012F93AFD100C7905D /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		AA300000 /* HuobaoDrama/HuobaoDrama */ = {
 			isa = PBXGroup;
 			children = (
 				AA100001 /* HuobaoDramaApp.swift */,
 				AA100002 /* ContentView.swift */,
 				AA100003 /* Assets.xcassets */,
+				1E217C022F93AFD100C7905D /* ViewModels */,
 				AA300002 /* Preview Content */,
 				AA300010 /* App */,
 				AA300011 /* Models */,
@@ -142,15 +166,14 @@
 			children = (
 				AA100004 /* Preview Assets.xcassets */,
 			);
-			name = "Preview Content";
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		AA300009 /* main */ = {
+		AA300009 = {
 			isa = PBXGroup;
 			children = (
-				AA300000 /* HuobaoDrama */,
-				AA300016 /* HuobaoDramaTests */,
+				AA300000 /* HuobaoDrama/HuobaoDrama */,
+				AA300016 /* HuobaoDrama/HuobaoDramaTests */,
 				AA300001 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -232,7 +255,7 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
-		AA300016 /* HuobaoDramaTests */ = {
+		AA300016 /* HuobaoDrama/HuobaoDramaTests */ = {
 			isa = PBXGroup;
 			children = (
 				AA100039 /* ModelDecodingTests.swift */,
@@ -298,7 +321,7 @@
 			};
 			buildConfigurationList = AA500000 /* Build configuration list for PBXProject "HuobaoDrama" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = zh-Hans;
+			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				"zh-Hans",
@@ -358,6 +381,8 @@
 				AA000025 /* DesignTokens.swift in Sources */,
 				AA000026 /* Shadows.swift in Sources */,
 				AA000027 /* ViewModifiers.swift in Sources */,
+				1E217C032F93AFD100C7905D /* SettingsViewModel.swift in Sources */,
+				1E217C042F93AFD100C7905D /* DramaListViewModel.swift in Sources */,
 				AA000028 /* SearchablePicker.swift in Sources */,
 				AA000029 /* CardView.swift in Sources */,
 				AA000030 /* TagView.swift in Sources */,
@@ -389,16 +414,6 @@
 			targetProxy = AA810000 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXContainerItemProxy section */
-		AA810000 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AA600000 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = AA400000;
-			remoteInfo = HuobaoDrama;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin XCBuildConfiguration section */
 		AA700000 /* Debug */ = {
