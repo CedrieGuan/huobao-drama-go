@@ -118,11 +118,12 @@ extension View {
 
 struct ShimmerView: View {
     @State private var phase: CGFloat = -1
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         GeometryReader { geo in
             LinearGradient(
-                gradient: Gradient(colors: [.clear, .white.opacity(0.4), .clear]),
+                gradient: Gradient(colors: shimmerColors),
                 startPoint: .init(x: phase, y: 0),
                 endPoint: .init(x: phase + 1, y: 0)
             )
@@ -132,5 +133,11 @@ struct ShimmerView: View {
                 phase = 1
             }
         }
+    }
+    
+    private var shimmerColors: [Color] {
+        colorScheme == .dark
+            ? [.clear, Color.white.opacity(0.15), .clear]
+            : [.clear, Color.white.opacity(0.4), .clear]
     }
 }

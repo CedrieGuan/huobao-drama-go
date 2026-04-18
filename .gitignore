@@ -46,5 +46,6 @@ configs/config.yaml
 tmp/
 temp/
 .superpowers/
+.workbuddy/
 /CLAUDE.md
 /AGENTS.md

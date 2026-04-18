@@ -24,7 +24,10 @@ struct SettingsPage: View {
             if showEditSheet, let mode = editSheetMode {
                 ZStack {
                     Color.bgOverlay.ignoresSafeArea()
-                        .onTapGesture { showEditSheet = false; editSheetMode = nil }
+                        .onTapGesture {
+                            showEditSheet = false
+                            editSheetMode = nil
+                        }
                     editSheetContainer(mode: mode)
                 }
                 .transition(.opacity.combined(with: .scale(scale: 0.96)))
@@ -49,10 +52,13 @@ struct SettingsPage: View {
         }
         .animation(Animation.normal, value: showEditSheet)
         .animation(Animation.normal, value: showHuobaoPreset)
-        .alert("删除配置", isPresented: Binding(
-            get: { configToDelete != nil },
-            set: { if !$0 { configToDelete = nil } }
-        )) {
+        .alert(
+            "删除配置",
+            isPresented: Binding(
+                get: { configToDelete != nil },
+                set: { if !$0 { configToDelete = nil } }
+            )
+        ) {
             Button("取消", role: .cancel) { configToDelete = nil }
             Button("删除", role: .destructive) {
                 if let c = configToDelete {
@@ -224,7 +230,7 @@ struct SettingsPage: View {
             brandHeader
 
             // Section title
-            sectionHeader("AI 服务配置", "用推荐模板快速落配置，再按服务类型微调。工作台创建集时会锁定所选图片、视频和音频能力。")
+            sectionHeader("AI 服务配置", subtitle: "用推荐模板快速落配置，再按服务类型微调。工作台创建集时会锁定所选图片、视频和音频能力。")
 
             // Huobao preset panel
             huobaoPresetPanel
@@ -297,7 +303,9 @@ struct SettingsPage: View {
                 }
 
                 // Preset cards grid
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: Spacing.sm) {
+                LazyVGrid(
+                    columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: Spacing.sm
+                ) {
                     ForEach(SettingsViewModel.huobaoPresetCards, id: \.serviceType) { card in
                         presetCard(card)
                     }
@@ -313,7 +321,9 @@ struct SettingsPage: View {
                     .font(.labelMedium)
                     .foregroundStyle(Color.text0)
                 Spacer()
-                TagView(text: card.provider, color: Color.accent, bgColor: Color.accentLight, size: .small)
+                TagView(
+                    text: card.provider, color: Color.accent, bgColor: Color.accentLight,
+                    size: .small)
             }
             Text(card.model)
                 .font(.monoSmall)
@@ -373,7 +383,9 @@ struct SettingsPage: View {
                 }
                 let count = viewModel.countActive(st.type)
                 if count > 0 {
-                    TagView(text: "\(count) 已启用", color: Color.accent, bgColor: Color.accentLight, size: .small)
+                    TagView(
+                        text: "\(count) 已启用", color: Color.accent, bgColor: Color.accentLight,
+                        size: .small)
                 }
                 Spacer()
                 Button {
@@ -459,10 +471,13 @@ struct SettingsPage: View {
             .disabled(testingConfigId != nil)
 
             // Toggle
-            Toggle("", isOn: Binding(
-                get: { config.isActive },
-                set: { _ in Task { await viewModel.toggleConfig(config) } }
-            ))
+            Toggle(
+                "",
+                isOn: Binding(
+                    get: { config.isActive },
+                    set: { _ in Task { await viewModel.toggleConfig(config) } }
+                )
+            )
             .toggleStyle(.switch)
             .controlSize(.small)
             .labelsHidden()
@@ -494,7 +509,7 @@ struct SettingsPage: View {
     }
 
     private var skillsSectionPlaceholder: some View {
-        sectionHeader("Skills 管理", "Skills 仅作为 Agent 的高级提示词层使用。")
+        sectionHeader("Skills 管理", subtitle: "Skills 仅作为 Agent 的高级提示词层使用。")
     }
 }
 

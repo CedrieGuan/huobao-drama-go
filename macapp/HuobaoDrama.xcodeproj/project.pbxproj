@@ -61,6 +61,8 @@
 		AA00004A /* ScriptPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004A /* ScriptPanel.swift */; };
 		AA00004B /* ToastBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004B /* ToastBanner.swift */; };
 		AA00004C /* AgentCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004C /* AgentCardList.swift */; };
+		AA00004D /* RawContentPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004D /* RawContentPanel.swift */; };
+		AA00004E /* RewritePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004E /* RewritePanel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +130,8 @@
 		AA10004A /* ScriptPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptPanel.swift; sourceTree = "<group>"; };
 		AA10004B /* ToastBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastBanner.swift; sourceTree = "<group>"; };
 		AA10004C /* AgentCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentCardList.swift; sourceTree = "<group>"; };
+		AA10004D /* RawContentPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawContentPanel.swift; sourceTree = "<group>"; };
+		AA10004E /* RewritePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewritePanel.swift; sourceTree = "<group>"; };
 		AA100050 /* HuobaoDramaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HuobaoDramaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -199,7 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				AA300000 /* HuobaoDrama/HuobaoDrama */,
-				AA300016 /* HuobaoDrama/HuobaoDramaTests */,
+				AA300020 /* HuobaoDrama/HuobaoDramaTests */,
 				AA300001 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -319,11 +323,13 @@
 			children = (
 				AA100049 /* StudioPage.swift */,
 				AA10004A /* ScriptPanel.swift */,
+				AA10004D /* RawContentPanel.swift */,
+				AA10004E /* RewritePanel.swift */,
 			);
 			path = Studio;
 			sourceTree = "<group>";
 		};
-		AA300016 /* HuobaoDrama/HuobaoDramaTests */ = {
+		AA300020 /* HuobaoDrama/HuobaoDramaTests */ = {
 			isa = PBXGroup;
 			children = (
 				AA100039 /* ModelDecodingTests.swift */,
@@ -474,6 +480,8 @@
 				AA00004A /* ScriptPanel.swift in Sources */,
 				AA00004B /* ToastBanner.swift in Sources */,
 					AA00004C /* AgentCardList.swift in Sources */,
+				AA00004D /* RawContentPanel.swift in Sources */,
+				AA00004E /* RewritePanel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
