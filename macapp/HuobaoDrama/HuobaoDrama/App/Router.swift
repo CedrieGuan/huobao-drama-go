@@ -3,6 +3,7 @@ import SwiftUI
 enum Route: Hashable {
     case dramaDetail(dramaId: Int)
     case studio(episodeId: Int, dramaId: Int)
+    case settings
 }
 
 @MainActor
@@ -20,5 +21,9 @@ final class Router {
 
     func popToRoot() {
         path.removeAll()
+    }
+
+    func navigateToSettings() {
+        path.append(.settings)
     }
 }

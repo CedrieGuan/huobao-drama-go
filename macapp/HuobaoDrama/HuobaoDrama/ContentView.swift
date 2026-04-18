@@ -6,36 +6,28 @@ struct RootView: View {
     var body: some View {
         @Bindable var router = router
         NavigationStack(path: $router.path) {
-            PlaceholderListView()
+            DramaListPage()
+                .toolbar {
+                    ToolbarItem(placement: .navigation) {
+                        Button {
+                            router.navigateToSettings()
+                        } label: {
+                            Image(systemName: "gearshape")
+                                .foregroundStyle(Color.text2)
+                        }
+                        .buttonStyle(IconButtonStyle())
+                    }
+                }
                 .navigationDestination(for: Route.self) { route in
                     switch route {
                     case .dramaDetail(let dramaId):
-                        Text("Drama Detail \(dramaId)")
+                        DramaDetailPage(dramaId: dramaId)
                     case .studio(let episodeId, let dramaId):
-                        Text("Studio ep=\(episodeId) drama=\(dramaId)")
+                        StudioPage(episodeId: episodeId, dramaId: dramaId)
+                    case .settings:
+                        SettingsPage()
                     }
                 }
         }
-    }
-}
-
-struct PlaceholderListView: View {
-    var body: some View {
-        VStack(spacing: Spacing.xl) {
-            Image(systemName: "film.stack")
-                .imageScale(.large)
-                .font(.system(size: 60))
-                .foregroundStyle(Color.accent)
-
-            Text("火爆短剧")
-                .font(.displayMedium)
-                .foregroundStyle(Color.text0)
-
-            Text("AI 驱动的短剧制作工具")
-                .font(.bodyLarge)
-                .foregroundStyle(Color.text2)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.bg1)
     }
 }

@@ -49,6 +49,18 @@
 		AA000038 /* ModalSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100038 /* ModalSheet.swift */; };
 		AA000039 /* ModelDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100039 /* ModelDecodingTests.swift */; };
 		AA000040 /* HuobaoDrama.app in Frameworks */ = {isa = PBXBuildFile; fileRef = AA100000 /* HuobaoDrama.app */; };
+		AA000041 /* StudioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100041 /* StudioViewModel.swift */; };
+		AA000042 /* DramaDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100042 /* DramaDetailViewModel.swift */; };
+		AA000043 /* DramaDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100043 /* DramaDetailPage.swift */; };
+		AA000044 /* DramaListPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100044 /* DramaListPage.swift */; };
+		AA000045 /* ProjectCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100045 /* ProjectCardView.swift */; };
+		AA000046 /* SettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100046 /* SettingsPage.swift */; };
+		AA000047 /* AIConfigEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100047 /* AIConfigEditSheet.swift */; };
+		AA000048 /* HuobaoPresetSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100048 /* HuobaoPresetSheet.swift */; };
+		AA000049 /* StudioPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100049 /* StudioPage.swift */; };
+		AA00004A /* ScriptPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004A /* ScriptPanel.swift */; };
+		AA00004B /* ToastBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004B /* ToastBanner.swift */; };
+		AA00004C /* AgentCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004C /* AgentCardList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +116,18 @@
 		AA100037 /* StepBubbleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepBubbleBar.swift; sourceTree = "<group>"; };
 		AA100038 /* ModalSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalSheet.swift; sourceTree = "<group>"; };
 		AA100039 /* ModelDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDecodingTests.swift; sourceTree = "<group>"; };
+		AA100041 /* StudioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioViewModel.swift; sourceTree = "<group>"; };
+		AA100042 /* DramaDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DramaDetailViewModel.swift; sourceTree = "<group>"; };
+		AA100043 /* DramaDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DramaDetailPage.swift; sourceTree = "<group>"; };
+		AA100044 /* DramaListPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DramaListPage.swift; sourceTree = "<group>"; };
+		AA100045 /* ProjectCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCardView.swift; sourceTree = "<group>"; };
+		AA100046 /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
+		AA100047 /* AIConfigEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIConfigEditSheet.swift; sourceTree = "<group>"; };
+		AA100048 /* HuobaoPresetSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HuobaoPresetSheet.swift; sourceTree = "<group>"; };
+		AA100049 /* StudioPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioPage.swift; sourceTree = "<group>"; };
+		AA10004A /* ScriptPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptPanel.swift; sourceTree = "<group>"; };
+		AA10004B /* ToastBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastBanner.swift; sourceTree = "<group>"; };
+		AA10004C /* AgentCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentCardList.swift; sourceTree = "<group>"; };
 		AA100050 /* HuobaoDramaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HuobaoDramaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -131,6 +155,8 @@
 			children = (
 				1E217C002F93AFD100C7905D /* DramaListViewModel.swift */,
 				1E217C012F93AFD100C7905D /* SettingsViewModel.swift */,
+				AA100041 /* StudioViewModel.swift */,
+				AA100042 /* DramaDetailViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -233,6 +259,10 @@
 			isa = PBXGroup;
 			children = (
 				AA300015 /* Common */,
+				AA300016 /* DramaDetail */,
+				AA300017 /* DramaList */,
+				AA300018 /* Settings */,
+				AA300019 /* Studio */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -251,8 +281,46 @@
 				AA100036 /* VideoPlayerView.swift */,
 				AA100037 /* StepBubbleBar.swift */,
 				AA100038 /* ModalSheet.swift */,
+				AA10004B /* ToastBanner.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		AA300016 /* DramaDetail */ = {
+			isa = PBXGroup;
+			children = (
+				AA100043 /* DramaDetailPage.swift */,
+			);
+			path = DramaDetail;
+			sourceTree = "<group>";
+		};
+		AA300017 /* DramaList */ = {
+			isa = PBXGroup;
+			children = (
+				AA100044 /* DramaListPage.swift */,
+				AA100045 /* ProjectCardView.swift */,
+			);
+			path = DramaList;
+			sourceTree = "<group>";
+		};
+		AA300018 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				AA100046 /* SettingsPage.swift */,
+				AA100047 /* AIConfigEditSheet.swift */,
+				AA100048 /* HuobaoPresetSheet.swift */,
+				AA10004C /* AgentCardList.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		AA300019 /* Studio */ = {
+			isa = PBXGroup;
+			children = (
+				AA100049 /* StudioPage.swift */,
+				AA10004A /* ScriptPanel.swift */,
+			);
+			path = Studio;
 			sourceTree = "<group>";
 		};
 		AA300016 /* HuobaoDrama/HuobaoDramaTests */ = {
@@ -394,6 +462,18 @@
 				AA000036 /* VideoPlayerView.swift in Sources */,
 				AA000037 /* StepBubbleBar.swift in Sources */,
 				AA000038 /* ModalSheet.swift in Sources */,
+				AA000041 /* StudioViewModel.swift in Sources */,
+				AA000042 /* DramaDetailViewModel.swift in Sources */,
+				AA000043 /* DramaDetailPage.swift in Sources */,
+				AA000044 /* DramaListPage.swift in Sources */,
+				AA000045 /* ProjectCardView.swift in Sources */,
+				AA000046 /* SettingsPage.swift in Sources */,
+				AA000047 /* AIConfigEditSheet.swift in Sources */,
+				AA000048 /* HuobaoPresetSheet.swift in Sources */,
+				AA000049 /* StudioPage.swift in Sources */,
+				AA00004A /* ScriptPanel.swift in Sources */,
+				AA00004B /* ToastBanner.swift in Sources */,
+					AA00004C /* AgentCardList.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
