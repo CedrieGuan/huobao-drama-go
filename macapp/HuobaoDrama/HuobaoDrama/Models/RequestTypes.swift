@@ -73,7 +73,7 @@ struct CreateAIServiceConfigRequest: Encodable {
     var name: String
     var baseUrl: String
     var apiKey: String
-    var model: String?
+    var model: [String]?
     var priority: Int?
     var isActive: Bool?
 
@@ -91,7 +91,7 @@ struct UpdateAIServiceConfigRequest: Encodable {
     var name: String?
     var baseUrl: String?
     var apiKey: String?
-    var model: String?
+    var model: [String]?
     var priority: Int?
     var isActive: Bool?
     var isDefault: Bool?

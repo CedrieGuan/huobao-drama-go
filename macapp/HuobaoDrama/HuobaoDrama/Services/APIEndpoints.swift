@@ -87,12 +87,27 @@ enum APIEndpoints {
         static func delete(id: Int) async throws {
             try await APIClient.shared.delete("/ai-configs/\(id)")
         }
-        static func test(id: Int) async throws -> EmptyData {
-            struct Body: Encodable { var id: Int }
-            return try await APIClient.shared.post("/ai-configs/test", body: Body(id: id))
+        static func test(serviceType: String, provider: String, baseUrl: String, apiKey: String?, model: [String]?) async throws -> EmptyData {
+            struct Body: Encodable {
+                var serviceType: String
+                var provider: String
+                var baseUrl: String
+                var apiKey: String?
+                var model: [String]?
+                enum CodingKeys: String, CodingKey {
+                    case serviceType = "service_type"
+                    case provider, model
+                    case baseUrl = "base_url"
+                    case apiKey = "api_key"
+                }
+            }
+            return try await APIClient.shared.post("/ai-configs/test", body: Body(
+                serviceType: serviceType, provider: provider, baseUrl: baseUrl,
+                apiKey: apiKey, model: model
+            ))
         }
         static func providers() async throws -> [AIServiceProvider] {
-            try await APIClient.shared.get("/ai-configs/providers")
+            try await APIClient.shared.get("/ai-providers")
         }
         static func setupHuobaoPreset(apiKey: String) async throws -> EmptyData {
             try await APIClient.shared.post("/ai-configs/huobao-preset", body: HuobaoPresetRequest(apiKey: apiKey))

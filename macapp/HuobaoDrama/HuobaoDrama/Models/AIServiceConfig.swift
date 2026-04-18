@@ -7,7 +7,7 @@ struct AIServiceConfig: Codable, Identifiable, Sendable {
     var name: String
     var baseUrl: String
     var apiKey: String
-    var model: String?
+    var model: [String]
     var endpoint: String?
     var queryEndpoint: String?
     var priority: Int
@@ -38,7 +38,7 @@ struct AIServiceConfig: Codable, Identifiable, Sendable {
         name = try c.decode(String.self, forKey: .name)
         baseUrl = try c.decode(String.self, forKey: .baseUrl)
         apiKey = try c.decode(String.self, forKey: .apiKey)
-        model = try c.decodeIfPresent(String.self, forKey: .model)
+        model = try c.decodeIfPresent([String].self, forKey: .model) ?? []
         endpoint = try c.decodeIfPresent(String.self, forKey: .endpoint)
         queryEndpoint = try c.decodeIfPresent(String.self, forKey: .queryEndpoint)
         priority = try c.decodeIfPresent(Int.self, forKey: .priority) ?? 0
@@ -81,9 +81,12 @@ struct AIServiceProvider: Codable, Identifiable, Sendable {
         defaultUrl = try c.decodeIfPresent(String.self, forKey: .defaultUrl)
         description = try c.decodeIfPresent(String.self, forKey: .description)
         isActive = try c.decodeIfPresent(Bool.self, forKey: .isActive) ?? true
-        if let raw = try c.decodeIfPresent(String.self, forKey: .presetModels),
-           let arr = try? JSONDecoder().decode([String].self, from: Data(raw.utf8)) {
-            presetModels = arr
+        // Backend returns preset_models as array (already parsed from JSON)
+        if let arr = try? c.decodeIfPresent([String].self, forKey: .presetModels) {
+            presetModels = arr ?? []
+        } else if let raw = try c.decodeIfPresent(String.self, forKey: .presetModels),
+                  let decoded = try? JSONDecoder().decode([String].self, from: Data(raw.utf8)) {
+            presetModels = decoded
         } else {
             presetModels = []
         }
