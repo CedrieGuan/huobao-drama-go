@@ -3,7 +3,7 @@ import SwiftUI
 /// A lightweight toast banner that auto-dismisses after a delay.
 /// Used to surface success/error messages from async operations.
 struct ToastBanner: View {
-    let toast: PresetToast
+    let toast: AppToast
     let onDismiss: () -> Void
 
     @State private var dismissTask: Task<Void, Never>?

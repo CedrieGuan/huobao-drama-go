@@ -38,6 +38,24 @@ enum StudioStep: Int, CaseIterable {
     }
 }
 
+// MARK: - StudioPanel 顶级面板枚举（E9）
+
+/// 顶级导航面板：剧本 / 制作 / 导出。
+enum StudioPanel: String, CaseIterable {
+    case script = "剧本"
+    case production = "制作"
+    case exportPanel = "导出"
+
+    /// 面板对应的 SF Symbol 图标。
+    var icon: String {
+        switch self {
+        case .script:      return "doc.text"
+        case .production:  return "hammer"
+        case .exportPanel: return "square.and.arrow.up"
+        }
+    }
+}
+
 // MARK: - Step Section
 
 private struct StepSection: Identifiable {
@@ -60,6 +78,9 @@ struct StudioPage: View {
     @State private var viewModel: StudioViewModel
     @Environment(Router.self) private var router
 
+    /// 当前激活的顶级面板。
+    @State private var activePanel: StudioPanel = .script
+
     init(episodeId: Int, dramaId: Int) {
         self.episodeId = episodeId
         self.dramaId = dramaId
@@ -74,6 +95,7 @@ struct StudioPage: View {
     var body: some View {
         VStack(spacing: 0) {
             topbar
+            panelTabs
             HStack(spacing: 0) {
                 sidebar
                 Divider()
@@ -184,6 +206,47 @@ struct StudioPage: View {
         }
     }
 
+    // MARK: - 面板切换标签
+
+    /// 在 topbar 下方显示的三面板切换标签，类似 segmented control。
+    private var panelTabs: some View {
+        HStack(spacing: 0) {
+            ForEach(StudioPanel.allCases, id: \.self) { panel in
+                panelTabButton(panel)
+            }
+        }
+        .padding(.horizontal, Spacing.xl)
+        .padding(.vertical, Spacing.xs)
+        .background(Color.bgCard)
+        .overlay(alignment: .bottom) {
+            Divider()
+        }
+    }
+
+    /// 单个面板切换按钮。
+    private func panelTabButton(_ panel: StudioPanel) -> some View {
+        let isActive = activePanel == panel
+
+        return Button {
+            withAnimation(Animation.normal) {
+                activePanel = panel
+            }
+        } label: {
+            HStack(spacing: Spacing.xs) {
+                Image(systemName: panel.icon)
+                    .font(.system(size: IconSize.sm, weight: isActive ? .semibold : .medium))
+                Text(panel.rawValue)
+                    .font(.bodySmall.weight(isActive ? .semibold : .regular))
+            }
+            .foregroundStyle(isActive ? Color.accent : Color.text2)
+            .padding(.horizontal, Spacing.lg)
+            .padding(.vertical, Spacing.sm)
+            .background(isActive ? Color.accentLight : Color.clear)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+        }
+        .buttonStyle(.plain)
+    }
+
     // MARK: - Progress Bar
 
     private var progressBar: some View {
@@ -209,11 +272,21 @@ struct StudioPage: View {
 
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Scrollable pipeline area
+            // Scrollable pipeline area — 根据当前面板切换内容
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: Spacing.lg) {
-                    ForEach(sidebarSections) { section in
-                        sectionView(section)
+                    switch activePanel {
+                    case .script:
+                        // 剧本面板：显示现有的 5 步管线
+                        ForEach(sidebarSections) { section in
+                            sectionView(section)
+                        }
+                    case .production:
+                        // 制作面板：显示 6 个子标签列表
+                        productionSidebarContent
+                    case .exportPanel:
+                        // 导出面板：显示导出概览
+                        exportSidebarContent
                     }
                 }
                 .padding(.horizontal, Spacing.md)
@@ -228,6 +301,165 @@ struct StudioPage: View {
         }
         .frame(width: 220)
         .background(Color.bgCard)
+        .animation(Animation.normal, value: activePanel)
+    }
+
+    // MARK: - 制作面板侧边栏内容
+
+    /// 制作面板侧边栏：展示 6 个子标签的快速导航列表。
+    private var productionSidebarContent: some View {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+            // 标签分组标题
+            Text("制作流程")
+                .font(.labelSmall.weight(.bold))
+                .foregroundStyle(Color.text3)
+                .padding(.horizontal, Spacing.sm)
+                .padding(.bottom, Spacing.xs)
+
+            // 各制作步骤列表
+            VStack(spacing: 0) {
+                ForEach(Array(ProductionTab.allCases.enumerated()), id: \.element) { index, tab in
+                    productionTabRow(tab, index: index, isLast: index == ProductionTab.allCases.count - 1)
+                }
+            }
+        }
+    }
+
+    /// 制作面板的单个侧边栏行。
+    private func productionTabRow(_ tab: ProductionTab, index: Int, isLast: Bool) -> some View {
+        HStack(spacing: Spacing.md) {
+            // 图标圆圈
+            ZStack {
+                Circle()
+                    .fill(Color.bg1)
+                    .frame(width: 26, height: 26)
+                Circle()
+                    .stroke(Color.border0, lineWidth: 1)
+                    .frame(width: 26, height: 26)
+                Image(systemName: tab.icon)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(Color.text3)
+            }
+            .zIndex(1)
+
+            // 标签标题
+            Text(tab.rawValue)
+                .font(.bodyMedium.weight(.regular))
+                .foregroundStyle(Color.text1)
+                .lineLimit(1)
+
+            Spacer()
+        }
+        .padding(.horizontal, Spacing.sm)
+        .padding(.vertical, Spacing.sm)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+        .overlay(alignment: .top) {
+            // 连接线
+            if !isLast {
+                Rectangle()
+                    .fill(Color.border0)
+                    .frame(width: 1)
+                    .offset(y: -4)
+                    .padding(.leading, 21)
+            }
+        }
+    }
+
+    // MARK: - 导出面板侧边栏内容
+
+    /// 导出面板侧边栏：显示镜头总览 / 视频合并 / 预览下载的概览。
+    private var exportSidebarContent: some View {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+            // 标签分组标题
+            Text("导出流程")
+                .font(.labelSmall.weight(.bold))
+                .foregroundStyle(Color.text3)
+                .padding(.horizontal, Spacing.sm)
+                .padding(.bottom, Spacing.xs)
+
+            // 导出概览列表
+            VStack(spacing: 0) {
+                exportStepRow(icon: "film.stack", title: "镜头总览", isLast: false)
+                exportStepRow(icon: "arrow.triangle.merge", title: "视频合并", isLast: false)
+                exportStepRow(icon: "play.rectangle", title: "预览下载", isLast: true)
+            }
+
+            // 镜头状态统计
+            if !viewModel.storyboards.isEmpty {
+                VStack(alignment: .leading, spacing: Spacing.sm) {
+                    Divider()
+                        .padding(.vertical, Spacing.xs)
+
+                    Text("镜头状态")
+                        .font(.labelSmall.weight(.bold))
+                        .foregroundStyle(Color.text3)
+
+                    HStack(spacing: Spacing.xs) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: IconSize.xs))
+                            .foregroundStyle(Color.statusSuccess)
+                        Text("\(completedComposeCount) 已就绪")
+                            .font(.labelSmall)
+                            .foregroundStyle(Color.text2)
+                    }
+
+                    HStack(spacing: Spacing.xs) {
+                        Image(systemName: "circle")
+                            .font(.system(size: IconSize.xs))
+                            .foregroundStyle(Color.text3)
+                        Text("\(viewModel.storyboards.count - completedComposeCount) 待处理")
+                            .font(.labelSmall)
+                            .foregroundStyle(Color.text2)
+                    }
+                }
+                .padding(.horizontal, Spacing.sm)
+                .padding(.top, Spacing.md)
+            }
+        }
+    }
+
+    /// 导出侧边栏的单个步骤行。
+    private func exportStepRow(icon: String, title: String, isLast: Bool) -> some View {
+        HStack(spacing: Spacing.md) {
+            ZStack {
+                Circle()
+                    .fill(Color.bg1)
+                    .frame(width: 26, height: 26)
+                Circle()
+                    .stroke(Color.border0, lineWidth: 1)
+                    .frame(width: 26, height: 26)
+                Image(systemName: icon)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(Color.text3)
+            }
+            .zIndex(1)
+
+            Text(title)
+                .font(.bodyMedium.weight(.regular))
+                .foregroundStyle(Color.text1)
+                .lineLimit(1)
+
+            Spacer()
+        }
+        .padding(.horizontal, Spacing.sm)
+        .padding(.vertical, Spacing.sm)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+        .overlay(alignment: .top) {
+            if !isLast {
+                Rectangle()
+                    .fill(Color.border0)
+                    .frame(width: 1)
+                    .offset(y: -4)
+                    .padding(.leading, 21)
+            }
+        }
+    }
+
+    /// 已合成完成的镜头数量。
+    private var completedComposeCount: Int {
+        viewModel.storyboards.filter { sb in
+            sb.composedVideoUrl != nil && !sb.composedVideoUrl!.isEmpty
+        }.count
     }
 
     // MARK: - Section
@@ -341,13 +573,13 @@ struct StudioPage: View {
 
     private var sidebarBottom: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
-            // Progress header
+            // Progress header — 根据当前面板显示不同进度标题
             HStack {
-                Text("制作进度")
+                Text(activePanel == .script ? "剧本进度" : activePanel == .production ? "制作进度" : "导出进度")
                     .font(.labelSmall)
                     .foregroundStyle(Color.text3)
                 Spacer()
-                Text("\(viewModel.completedStepCount)/\(viewModel.totalSteps)")
+                Text("\(progressCompleted)/\(progressTotal)")
                     .font(.labelSmall)
                     .foregroundStyle(Color.text2)
                     .monospacedDigit()
@@ -360,9 +592,9 @@ struct StudioPage: View {
                         .fill(Color.bg3)
                         .frame(height: 4)
                     RoundedRectangle(cornerRadius: Radius.full)
-                        .fill(viewModel.progressFraction >= 1.0 ? Color.statusSuccess : Color.accent)
-                        .frame(width: max(0, geo.size.width * viewModel.progressFraction), height: 4)
-                        .animation(Animation.normal, value: viewModel.progressFraction)
+                        .fill(sidebarProgressFraction >= 1.0 ? Color.statusSuccess : Color.accent)
+                        .frame(width: max(0, geo.size.width * sidebarProgressFraction), height: 4)
+                        .animation(Animation.normal, value: sidebarProgressFraction)
                 }
             }
             .frame(height: 4)
@@ -378,6 +610,41 @@ struct StudioPage: View {
         )
     }
 
+    /// 侧边栏底部进度：根据当前面板返回已完成步骤数。
+    private var progressCompleted: Int {
+        switch activePanel {
+        case .script:
+            return viewModel.completedStepCount
+        case .production:
+            // 制作面板：基于分镜和角色数据简单估算
+            var count = 0
+            if !viewModel.characters.isEmpty { count += 1 }
+            if !viewModel.scenes.isEmpty { count += 1 }
+            if !viewModel.storyboards.isEmpty { count += 1 }
+            return count
+        case .exportPanel:
+            return completedComposeCount
+        }
+    }
+
+    /// 侧边栏底部进度：根据当前面板返回总步骤数。
+    private var progressTotal: Int {
+        switch activePanel {
+        case .script:
+            return viewModel.totalSteps
+        case .production:
+            return 6
+        case .exportPanel:
+            return viewModel.storyboards.count
+        }
+    }
+
+    /// 侧边栏底部进度百分比（0...1）。
+    private var sidebarProgressFraction: Double {
+        guard progressTotal > 0 else { return 0 }
+        return Double(progressCompleted) / Double(progressTotal)
+    }
+
     // MARK: - Main Content
 
     private var mainContent: some View {
@@ -387,7 +654,15 @@ struct StudioPage: View {
             } else if viewModel.error != nil {
                 errorView
             } else {
-                ScriptPanel(viewModel: viewModel)
+                // 根据激活的顶级面板切换显示内容
+                switch activePanel {
+                case .script:
+                    ScriptPanel(viewModel: viewModel)
+                case .production:
+                    ProductionPanel(viewModel: viewModel)
+                case .exportPanel:
+                    ExportPanel(viewModel: viewModel)
+                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

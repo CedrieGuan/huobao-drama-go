@@ -65,6 +65,9 @@ enum APIEndpoints {
 
     // MARK: - Storyboard
     enum StoryboardAPI {
+        static func create(_ req: CreateStoryboardRequest) async throws -> Storyboard {
+            try await APIClient.shared.post("/storyboards", body: req)
+        }
         static func update(id: Int, _ req: UpdateStoryboardRequest) async throws -> EmptyData {
             try await APIClient.shared.put("/storyboards/\(id)", body: req)
         }
@@ -131,6 +134,10 @@ enum APIEndpoints {
     enum SkillsAPI {
         static func list() async throws -> [Skill] {
             try await APIClient.shared.get("/skills")
+        }
+        static func create(id: String, name: String, description: String) async throws -> EmptyData {
+            struct Body: Encodable { var id: String; var name: String; var description: String }
+            return try await APIClient.shared.post("/skills", body: Body(id: id, name: name, description: description))
         }
         static func get(id: String) async throws -> Skill {
             try await APIClient.shared.get("/skills/\(id)")

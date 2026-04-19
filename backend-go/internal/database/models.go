@@ -4,7 +4,12 @@
 // and JSON payloads are stored as string.
 package database
 
-import "time"
+import (
+	"time"
+
+	"github.com/CedrieGuan/huobao-drama-go/backend-go/internal/util"
+	"gorm.io/gorm"
+)
 
 // Now returns the current UTC time as an ISO 8601 formatted string,
 // e.g. "2024-01-15T10:30:00.000Z".
@@ -222,6 +227,38 @@ type AIServiceConfig struct {
 }
 
 func (AIServiceConfig) TableName() string { return "ai_service_configs" }
+
+// BeforeCreate encrypts the API key before saving to database.
+func (c *AIServiceConfig) BeforeCreate(tx *gorm.DB) error {
+	if c.APIKey != "" {
+		encrypted, err := util.Encrypt(c.APIKey)
+		if err != nil {
+			return err
+		}
+		c.APIKey = encrypted
+	}
+	return nil
+}
+
+// BeforeUpdate encrypts the API key if it has been changed.
+func (c *AIServiceConfig) BeforeUpdate(tx *gorm.DB) error {
+	if c.APIKey != "" {
+		encrypted, err := util.Encrypt(c.APIKey)
+		if err != nil {
+			return err
+		}
+		c.APIKey = encrypted
+	}
+	return nil
+}
+
+// AfterFind decrypts the API key after loading from database.
+func (c *AIServiceConfig) AfterFind(tx *gorm.DB) error {
+	if c.APIKey != "" {
+		c.APIKey = util.Decrypt(c.APIKey)
+	}
+	return nil
+}
 
 // ---------------------------------------------------------------------------
 // 10. AIServiceProvider

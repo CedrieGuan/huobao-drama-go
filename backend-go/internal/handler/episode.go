@@ -49,17 +49,24 @@ func (h *Handler) CreateEpisode(c *gin.Context) {
 
 	ts := database.Now()
 
-	// Calculate next episode number.
-	var existing []database.Episode
-	h.DB.Where("drama_id = ?", body.DramaID).
-		Order("episode_number ASC").
-		Find(&existing)
-
-	nextNum := 1
-	for _, ep := range existing {
-		if ep.EpisodeNumber >= nextNum {
-			nextNum = ep.EpisodeNumber + 1
+	var nextNum int
+	if err := h.DB.Transaction(func(tx *gorm.DB) error {
+		// Calculate next episode number atomically within a transaction.
+		var maxNum *int
+		if err := tx.Model(&database.Episode{}).
+			Where("drama_id = ?", body.DramaID).
+			Select("MAX(episode_number)").
+			Scan(&maxNum).Error; err != nil {
+			return err
 		}
+		nextNum = 1
+		if maxNum != nil && *maxNum >= nextNum {
+			nextNum = *maxNum + 1
+		}
+		return nil
+	}); err != nil {
+		util.ServerError(c, err.Error())
+		return
 	}
 
 	title := "第" + strconv.Itoa(nextNum) + "集"
@@ -243,38 +250,37 @@ func (h *Handler) GetEpisodeStoryboards(c *gin.Context) {
 		Order("storyboard_number ASC").
 		Find(&storyboards)
 
-	// Build character ID lookup per storyboard from join table.
-	var allSBChars []database.StoryboardCharacter
-	h.DB.Find(&allSBChars)
+	// Collect storyboard IDs for batch queries.
+	sbIDs := make([]int, 0, len(storyboards))
+	for _, sb := range storyboards {
+		sbIDs = append(sbIDs, sb.ID)
+	}
+
+	// Batch fetch character associations for these storyboards only.
+	var sbCharLinks []database.StoryboardCharacter
+	if len(sbIDs) > 0 {
+		h.DB.Where("storyboard_id IN ?", sbIDs).Find(&sbCharLinks)
+	}
 
 	charIDsBySB := make(map[int][]int)
-	for _, link := range allSBChars {
+	allCharIDs := make(map[int]bool)
+	for _, link := range sbCharLinks {
 		charIDsBySB[link.StoryboardID] = append(charIDsBySB[link.StoryboardID], link.CharacterID)
+		allCharIDs[link.CharacterID] = true
 	}
 
-	// Fetch episode character IDs to determine which characters belong to this episode.
-	var epCharLinks []database.EpisodeCharacter
-	h.DB.Where("episode_id = ?", episodeID).Find(&epCharLinks)
-	epCharIDs := make(map[int]bool, len(epCharLinks))
-	for _, l := range epCharLinks {
-		epCharIDs[l.CharacterID] = true
-	}
-
-	// Fetch all non-deleted characters that belong to this episode.
-	var allChars []database.Character
-	h.DB.Where("deleted_at IS NULL").Find(&allChars)
-
-	epChars := make([]database.Character, 0)
-	for i := range allChars {
-		if epCharIDs[allChars[i].ID] {
-			epChars = append(epChars, allChars[i])
+	// Batch fetch only the characters referenced by these storyboards.
+	charByID := make(map[int]database.Character)
+	if len(allCharIDs) > 0 {
+		ids := make([]int, 0, len(allCharIDs))
+		for id := range allCharIDs {
+			ids = append(ids, id)
 		}
-	}
-
-	// Build char lookup by ID for quick enrichment.
-	charByID := make(map[int]database.Character, len(epChars))
-	for _, ch := range epChars {
-		charByID[ch.ID] = ch
+		var chars []database.Character
+		h.DB.Where("id IN ? AND deleted_at IS NULL", ids).Find(&chars)
+		for _, ch := range chars {
+			charByID[ch.ID] = ch
+		}
 	}
 
 	// Enrich each storyboard.

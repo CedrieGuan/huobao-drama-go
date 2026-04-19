@@ -125,6 +125,27 @@ struct UpsertAgentConfigRequest: Encodable {
 }
 
 // MARK: - Storyboard Requests
+struct CreateStoryboardRequest: Encodable {
+    var episodeId: Int
+    var storyboardNumber: Int?
+    var title: String?
+    var description: String?
+    var action: String?
+    var dialogue: String?
+    var sceneId: Int?
+    var duration: Int?
+    var characterIds: [Int]?
+
+    enum CodingKeys: String, CodingKey {
+        case title, description, action, dialogue
+        case episodeId = "episode_id"
+        case storyboardNumber = "storyboard_number"
+        case sceneId = "scene_id"
+        case duration
+        case characterIds = "character_ids"
+    }
+}
+
 struct UpdateStoryboardRequest: Encodable {
     var title: String?
     var location: String?

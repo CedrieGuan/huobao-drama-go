@@ -73,18 +73,37 @@ func (h *Handler) ListDramas(c *gin.Context) {
 		Scenes        []database.Scene     `json:"scenes"`
 	}
 
+	// Batch-load related data for all page items to avoid N+1 queries.
+	dramaIDs := make([]int, 0, len(pageItems))
+	for _, d := range pageItems {
+		dramaIDs = append(dramaIDs, d.ID)
+	}
+
+	var allEps []database.Episode
+	var allChars []database.Character
+	var allScns []database.Scene
+	if len(dramaIDs) > 0 {
+		h.DB.Where("drama_id IN ?", dramaIDs).Find(&allEps)
+		h.DB.Where("drama_id IN ?", dramaIDs).Find(&allChars)
+		h.DB.Where("drama_id IN ?", dramaIDs).Find(&allScns)
+	}
+
+	epsByDrama := make(map[int][]database.Episode)
+	for _, ep := range allEps {
+		epsByDrama[ep.DramaID] = append(epsByDrama[ep.DramaID], ep)
+	}
+	charsByDrama := make(map[int][]database.Character)
+	for _, ch := range allChars {
+		charsByDrama[ch.DramaID] = append(charsByDrama[ch.DramaID], ch)
+	}
+	scnsByDrama := make(map[int][]database.Scene)
+	for _, sc := range allScns {
+		scnsByDrama[sc.DramaID] = append(scnsByDrama[sc.DramaID], sc)
+	}
+
 	items := make([]enrichedDrama, 0, len(pageItems))
 	for i := range pageItems {
 		d := &pageItems[i]
-
-		var eps []database.Episode
-		h.DB.Where("drama_id = ?", d.ID).Find(&eps)
-
-		var chars []database.Character
-		h.DB.Where("drama_id = ?", d.ID).Find(&chars)
-
-		var scns []database.Scene
-		h.DB.Where("drama_id = ?", d.ID).Find(&scns)
 
 		var tags interface{} = []interface{}{}
 		if d.Tags != nil {
@@ -97,10 +116,10 @@ func (h *Handler) ListDramas(c *gin.Context) {
 		items = append(items, enrichedDrama{
 			Drama:         *d,
 			Tags:          tags,
-			TotalEpisodes: len(eps),
-			Episodes:      eps,
-			Characters:    chars,
-			Scenes:        scns,
+			TotalEpisodes: len(epsByDrama[d.ID]),
+			Episodes:      epsByDrama[d.ID],
+			Characters:    charsByDrama[d.ID],
+			Scenes:        scnsByDrama[d.ID],
 		})
 	}
 
@@ -173,16 +192,24 @@ func (h *Handler) CreateDrama(c *gin.Context) {
 	if body.TotalEpisodes != nil && *body.TotalEpisodes > 0 {
 		totalEps = *body.TotalEpisodes
 	}
-	for i := 1; i <= totalEps; i++ {
-		ep := database.Episode{
-			DramaID:       drama.ID,
-			EpisodeNumber: i,
-			Title:         "第" + strconv.Itoa(i) + "集",
-			Status:        stringPtr("draft"),
-			CreatedAt:     ts,
-			UpdatedAt:     ts,
+	if err := h.DB.Transaction(func(tx *gorm.DB) error {
+		for i := 1; i <= totalEps; i++ {
+			ep := database.Episode{
+				DramaID:       drama.ID,
+				EpisodeNumber: i,
+				Title:         "第" + strconv.Itoa(i) + "集",
+				Status:        stringPtr("draft"),
+				CreatedAt:     ts,
+				UpdatedAt:     ts,
+			}
+			if err := tx.Create(&ep).Error; err != nil {
+				return err
+			}
 		}
-		h.DB.Create(&ep)
+		return nil
+	}); err != nil {
+		util.ServerError(c, err.Error())
+		return
 	}
 
 	util.Created(c, drama)
@@ -378,51 +405,62 @@ func (h *Handler) UpsertDramaCharacters(c *gin.Context) {
 
 	ts := database.Now()
 
-	for _, charData := range body.Characters {
-		if charID, ok := toInt(charData["id"]); ok && charID > 0 {
-			// Update existing character.
-			updates := map[string]interface{}{
-				"updated_at": ts,
+	err = h.DB.Transaction(func(tx *gorm.DB) error {
+		for _, charData := range body.Characters {
+			if charID, ok := toInt(charData["id"]); ok && charID > 0 {
+				// Update existing character.
+				updates := map[string]interface{}{
+					"updated_at": ts,
+				}
+				copyAllowedFields(charData, updates, map[string]string{
+					"name": "name", "role": "role", "description": "description",
+					"appearance": "appearance", "personality": "personality",
+					"voice_style": "voice_style", "image_url": "image_url",
+					"reference_images": "reference_images", "seed_value": "seed_value",
+					"sort_order": "sort_order", "local_path": "local_path",
+				})
+				if err := tx.Model(&database.Character{}).Where("id = ?", charID).Updates(updates).Error; err != nil {
+					return err
+				}
+			} else {
+				// Insert new character.
+				char := database.Character{
+					DramaID:   dramaID,
+					Name:      toStringOr(charData, "name", ""),
+					CreatedAt: ts,
+					UpdatedAt: ts,
+				}
+				if v, ok := toString(charData["role"]); ok {
+					char.Role = &v
+				}
+				if v, ok := toString(charData["description"]); ok {
+					char.Description = &v
+				}
+				if v, ok := toString(charData["appearance"]); ok {
+					char.Appearance = &v
+				}
+				if v, ok := toString(charData["personality"]); ok {
+					char.Personality = &v
+				}
+				if v, ok := toString(charData["voice_style"]); ok {
+					char.VoiceStyle = &v
+				}
+				if v, ok := toString(charData["image_url"]); ok {
+					char.ImageURL = &v
+				}
+				if v, ok := toInt(charData["sort_order"]); ok {
+					char.SortOrder = &v
+				}
+				if err := tx.Create(&char).Error; err != nil {
+					return err
+				}
 			}
-			copyAllowedFields(charData, updates, map[string]string{
-				"name": "name", "role": "role", "description": "description",
-				"appearance": "appearance", "personality": "personality",
-				"voice_style": "voice_style", "image_url": "image_url",
-				"reference_images": "reference_images", "seed_value": "seed_value",
-				"sort_order": "sort_order", "local_path": "local_path",
-			})
-			h.DB.Model(&database.Character{}).Where("id = ?", charID).Updates(updates)
-		} else {
-			// Insert new character.
-			char := database.Character{
-				DramaID:   dramaID,
-				Name:      toStringOr(charData, "name", ""),
-				CreatedAt: ts,
-				UpdatedAt: ts,
-			}
-			if v, ok := toString(charData["role"]); ok {
-				char.Role = &v
-			}
-			if v, ok := toString(charData["description"]); ok {
-				char.Description = &v
-			}
-			if v, ok := toString(charData["appearance"]); ok {
-				char.Appearance = &v
-			}
-			if v, ok := toString(charData["personality"]); ok {
-				char.Personality = &v
-			}
-			if v, ok := toString(charData["voice_style"]); ok {
-				char.VoiceStyle = &v
-			}
-			if v, ok := toString(charData["image_url"]); ok {
-				char.ImageURL = &v
-			}
-			if v, ok := toInt(charData["sort_order"]); ok {
-				char.SortOrder = &v
-			}
-			h.DB.Create(&char)
 		}
+		return nil
+	})
+	if err != nil {
+		util.ServerError(c, err.Error())
+		return
 	}
 
 	util.Success(c, nil)
@@ -451,45 +489,56 @@ func (h *Handler) UpsertDramaEpisodes(c *gin.Context) {
 
 	ts := database.Now()
 
-	for _, epData := range body.Episodes {
-		if epID, ok := toInt(epData["id"]); ok && epID > 0 {
-			// Update existing episode.
-			updates := map[string]interface{}{
-				"updated_at": ts,
+	err = h.DB.Transaction(func(tx *gorm.DB) error {
+		for _, epData := range body.Episodes {
+			if epID, ok := toInt(epData["id"]); ok && epID > 0 {
+				// Update existing episode.
+				updates := map[string]interface{}{
+					"updated_at": ts,
+				}
+				copyAllowedFields(epData, updates, map[string]string{
+					"title": "title", "description": "description",
+					"content": "content", "script_content": "script_content",
+					"status": "status", "episode_number": "episode_number",
+					"duration": "duration", "video_url": "video_url",
+					"thumbnail":       "thumbnail",
+					"image_config_id": "image_config_id",
+					"video_config_id": "video_config_id",
+					"audio_config_id": "audio_config_id",
+				})
+				if err := tx.Model(&database.Episode{}).Where("id = ?", epID).Updates(updates).Error; err != nil {
+					return err
+				}
+			} else {
+				// Insert new episode.
+				epNum := 1
+				if v, ok := toInt(epData["episode_number"]); ok {
+					epNum = v
+				}
+				title := "未命名"
+				if v, ok := toString(epData["title"]); ok && v != "" {
+					title = v
+				}
+				ep := database.Episode{
+					DramaID:       dramaID,
+					EpisodeNumber: epNum,
+					Title:         title,
+					CreatedAt:     ts,
+					UpdatedAt:     ts,
+				}
+				if v, ok := toString(epData["status"]); ok {
+					ep.Status = &v
+				}
+				if err := tx.Create(&ep).Error; err != nil {
+					return err
+				}
 			}
-			copyAllowedFields(epData, updates, map[string]string{
-				"title": "title", "description": "description",
-				"content": "content", "script_content": "script_content",
-				"status": "status", "episode_number": "episode_number",
-				"duration": "duration", "video_url": "video_url",
-				"thumbnail":       "thumbnail",
-				"image_config_id": "image_config_id",
-				"video_config_id": "video_config_id",
-				"audio_config_id": "audio_config_id",
-			})
-			h.DB.Model(&database.Episode{}).Where("id = ?", epID).Updates(updates)
-		} else {
-			// Insert new episode.
-			epNum := 1
-			if v, ok := toInt(epData["episode_number"]); ok {
-				epNum = v
-			}
-			title := "未命名"
-			if v, ok := toString(epData["title"]); ok && v != "" {
-				title = v
-			}
-			ep := database.Episode{
-				DramaID:       dramaID,
-				EpisodeNumber: epNum,
-				Title:         title,
-				CreatedAt:     ts,
-				UpdatedAt:     ts,
-			}
-			if v, ok := toString(epData["status"]); ok {
-				ep.Status = &v
-			}
-			h.DB.Create(&ep)
 		}
+		return nil
+	})
+	if err != nil {
+		util.ServerError(c, err.Error())
+		return
 	}
 
 	util.Success(c, nil)

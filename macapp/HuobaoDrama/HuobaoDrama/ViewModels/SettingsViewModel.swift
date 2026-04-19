@@ -34,8 +34,8 @@ struct ProviderPreset {
     let models: [String]
 }
 
-/// Toast notification for preset creation results.
-struct PresetToast: Equatable {
+/// Toast 通知，用于操作成功/失败的即时反馈
+struct AppToast: Equatable {
     enum Kind { case success, error }
     let kind: Kind
     let message: String
@@ -48,8 +48,8 @@ final class SettingsViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var error: String?
 
-    // Toast state for preset sheet results
-    @Published var presetToast: PresetToast?
+    // 全局 Toast 状态
+    @Published var toast: AppToast?
 
     // AI Service Configs
     @Published var aiConfigs: [AIServiceConfig] = []
@@ -63,7 +63,22 @@ final class SettingsViewModel: ObservableObject {
 
     // Skills
     @Published var skills: [Skill] = []
-    @Published var selectedAgentType: String?
+    @Published var selectedAgentType: String = "script_rewriter"
+    @Published var editingSkillId: String?
+    @Published var skillContent: String = ""
+    @Published var isSkillSaving = false
+    @Published var skillSavedId: String?
+
+    // Skill 删除中的 loading 状态
+    @Published var deletingSkillId: String?
+
+    // New skill form state
+    @Published var showAddSkillSheet = false
+    @Published var newSkillId: String = ""
+    @Published var newSkillName: String = ""
+    @Published var newSkillDescription: String = ""
+    @Published var isCreatingSkill = false
+    @Published var skillValidationError: String?
 
     static let agentDefs: [AgentDef] = [
         .init(type: "script_rewriter", label: "剧本改写", icon: "doc.text.fill"),
@@ -190,6 +205,7 @@ final class SettingsViewModel: ObservableObject {
             skills = s
         } catch {
             self.error = error.localizedDescription
+            toast = AppToast(kind: .error, message: "加载设置失败：\(error.localizedDescription)")
         }
         isLoading = false
     }
@@ -350,6 +366,7 @@ final class SettingsViewModel: ObservableObject {
             await reloadConfigs()
         } catch {
             self.error = error.localizedDescription
+            toast = AppToast(kind: .error, message: "切换配置失败：\(error.localizedDescription)")
         }
     }
 
@@ -358,8 +375,10 @@ final class SettingsViewModel: ObservableObject {
         do {
             try await APIEndpoints.AIConfigAPI.delete(id: config.id)
             aiConfigs.removeAll { $0.id == config.id }
+            toast = AppToast(kind: .success, message: "配置「\(config.name)」已删除")
         } catch {
             self.error = error.localizedDescription
+            toast = AppToast(kind: .error, message: "删除失败：\(error.localizedDescription)")
         }
         deletingConfigId = nil
     }
@@ -375,9 +394,11 @@ final class SettingsViewModel: ObservableObject {
                 model: config.model
             )
             testingConfigId = nil
+            toast = AppToast(kind: .success, message: "测试通过：\(config.name)")
             return true
         } catch {
             self.error = error.localizedDescription
+            toast = AppToast(kind: .error, message: "测试失败：\(error.localizedDescription)")
             testingConfigId = nil
             return false
         }
@@ -388,6 +409,7 @@ final class SettingsViewModel: ObservableObject {
             aiConfigs = try await APIEndpoints.AIConfigAPI.list()
         } catch {
             self.error = error.localizedDescription
+            toast = AppToast(kind: .error, message: "刷新配置失败：\(error.localizedDescription)")
         }
     }
 
@@ -399,12 +421,123 @@ final class SettingsViewModel: ObservableObject {
         do {
             try await APIEndpoints.AIConfigAPI.setupHuobaoPreset(apiKey: apiKey)
             await reloadConfigs()
-            presetToast = PresetToast(kind: .success, message: "火宝推荐配置与默认 Agent LLM 已写入")
+            toast = AppToast(kind: .success, message: "火宝推荐配置与默认 Agent LLM 已写入")
             return true
         } catch {
-            presetToast = PresetToast(kind: .error, message: error.localizedDescription)
+            toast = AppToast(kind: .error, message: error.localizedDescription)
             return false
         }
+    }
+
+    // MARK: - Skills Management
+
+    /// Skills belonging to the currently selected agent.
+    var currentSkills: [Skill] {
+        skills.filter { $0.id == selectedAgentType || $0.id.hasPrefix(selectedAgentType + "/") }
+    }
+
+    /// Number of skills for a given agent type.
+    func agentSkillCount(_ type: String) -> Int {
+        skills.filter { $0.id == type || $0.id.hasPrefix(type + "/") }.count
+    }
+
+    func selectAgent(_ type: String) {
+        selectedAgentType = type
+        editingSkillId = nil
+    }
+
+    func startAddSkill() {
+        newSkillId = ""
+        newSkillName = ""
+        newSkillDescription = ""
+        skillValidationError = nil
+        showAddSkillSheet = true
+    }
+
+    /// 新建 Skill 前的表单验证
+    func validateNewSkill() -> Bool {
+        let trimmedId = newSkillId.trimmingCharacters(in: .whitespaces)
+        let trimmedName = newSkillName.trimmingCharacters(in: .whitespaces)
+
+        if trimmedId.isEmpty {
+            skillValidationError = "Skill ID 不能为空"
+            return false
+        }
+        if trimmedName.isEmpty {
+            skillValidationError = "名称不能为空"
+            return false
+        }
+        // ID 只允许字母、数字、下划线和中划线
+        let allowedChars = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_-"))
+        if trimmedId.unicodeScalars.contains(where: { !allowedChars.contains($0) }) {
+            skillValidationError = "Skill ID 只能包含字母、数字、下划线和中划线"
+            return false
+        }
+        // 检查是否已存在同 ID 的 Skill
+        let fullId = "\(selectedAgentType)/\(trimmedId)"
+        if skills.contains(where: { $0.id == fullId }) {
+            skillValidationError = "该 Skill ID 已存在"
+            return false
+        }
+        skillValidationError = nil
+        return true
+    }
+
+    func confirmAddSkill() async {
+        guard validateNewSkill() else { return }
+
+        let trimmedId = newSkillId.trimmingCharacters(in: .whitespaces)
+        let skillId = "\(selectedAgentType)/\(trimmedId)"
+        isCreatingSkill = true
+        do {
+            try await APIEndpoints.SkillsAPI.create(id: skillId, name: newSkillName.trimmingCharacters(in: .whitespaces), description: newSkillDescription)
+            showAddSkillSheet = false
+            skills = try await APIEndpoints.SkillsAPI.list()
+            toast = AppToast(kind: .success, message: "Skill「\(newSkillName.trimmingCharacters(in: .whitespaces))」已创建")
+        } catch {
+            toast = AppToast(kind: .error, message: "创建失败：\(error.localizedDescription)")
+        }
+        isCreatingSkill = false
+    }
+
+    func deleteSkill(_ skill: Skill) async {
+        deletingSkillId = skill.id
+        do {
+            try await APIEndpoints.SkillsAPI.delete(id: skill.id)
+            if editingSkillId == skill.id { editingSkillId = nil }
+            skills = try await APIEndpoints.SkillsAPI.list()
+            toast = AppToast(kind: .success, message: "Skill「\(skill.name.isEmpty ? skill.id : skill.name)」已删除")
+        } catch {
+            toast = AppToast(kind: .error, message: "删除失败：\(error.localizedDescription)")
+        }
+        deletingSkillId = nil
+    }
+
+    func toggleSkillEdit(_ skill: Skill) async {
+        if editingSkillId == skill.id { editingSkillId = nil; return }
+        do {
+            let detail = try await APIEndpoints.SkillsAPI.get(id: skill.id)
+            skillContent = detail.content ?? ""
+            skillSavedId = nil
+            editingSkillId = skill.id
+        } catch {
+            toast = AppToast(kind: .error, message: "加载 Skill 内容失败：\(error.localizedDescription)")
+        }
+    }
+
+    func saveSkillContent() async {
+        guard let id = editingSkillId else { return }
+        isSkillSaving = true
+        skillSavedId = nil
+        do {
+            try await APIEndpoints.SkillsAPI.update(id: id, content: skillContent)
+            skills = try await APIEndpoints.SkillsAPI.list()
+            skillSavedId = id
+            toast = AppToast(kind: .success, message: "Skill 内容已保存")
+        } catch {
+            toast = AppToast(kind: .error, message: "保存失败：\(error.localizedDescription)")
+        }
+        isSkillSaving = false
     }
 
     var baseTabs: [SettingsTab] {

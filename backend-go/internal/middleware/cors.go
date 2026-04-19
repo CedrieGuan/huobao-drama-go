@@ -9,7 +9,8 @@ import (
 
 // CORS returns a Gin middleware that handles Cross-Origin Resource Sharing.
 // It checks the request Origin against the allowedOrigins list and sets the
-// appropriate response headers. If allowedOrigins is empty, all origins are allowed.
+// appropriate response headers. If allowedOrigins is empty, no CORS headers
+// are set (deny by default).
 func CORS(allowedOrigins []string) gin.HandlerFunc {
 	// Build a set for fast lookup.
 	originSet := make(map[string]bool, len(allowedOrigins))
@@ -17,16 +18,11 @@ func CORS(allowedOrigins []string) gin.HandlerFunc {
 		originSet[strings.TrimSpace(o)] = true
 	}
 
-	// If no origins configured, allow all (*).
-	allowAll := len(allowedOrigins) == 0
-
 	return func(c *gin.Context) {
 		origin := c.GetHeader("Origin")
 
 		var allowOrigin string
-		if allowAll {
-			allowOrigin = "*"
-		} else if origin != "" && originSet[origin] {
+		if origin != "" && originSet[origin] {
 			allowOrigin = origin
 		}
 

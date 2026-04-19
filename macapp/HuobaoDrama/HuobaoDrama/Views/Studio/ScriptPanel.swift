@@ -70,26 +70,11 @@ struct ScriptPanel: View {
         case .rewrite:
             RewritePanel(viewModel: viewModel)
         case .extract:
-            StepPlaceholderView(
-                icon: "person.2",
-                title: "提取角色场景",
-                description: "AI 自动分析剧本，提取角色信息和场景列表。",
-                futureBatch: "E7.1"
-            )
+            ExtractPanel(viewModel: viewModel)
         case .voiceAssign:
-            StepPlaceholderView(
-                icon: "waveform",
-                title: "分配音色",
-                description: "为每个角色分配朗读音色，用于后续语音合成。",
-                futureBatch: "E8.1"
-            )
+            VoiceAssignPanel(viewModel: viewModel)
         case .storyboard:
-            StepPlaceholderView(
-                icon: "film",
-                title: "分镜列表",
-                description: "根据剧本和角色生成分镜列表，为制作视频做准备。",
-                futureBatch: "E9.1"
-            )
+            StoryboardPanel(viewModel: viewModel)
         }
     }
 }

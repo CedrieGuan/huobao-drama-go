@@ -12,6 +12,9 @@ struct SettingsPage: View {
     // Huobao preset sheet state (D5.1)
     @State private var showHuobaoPreset = false
 
+    // Skill delete confirmation state (D7.2)
+    @State private var skillToDelete: Skill?
+
     var body: some View {
         HStack(spacing: 0) {
             sidebar
@@ -71,19 +74,39 @@ struct SettingsPage: View {
                 Text("确定删除「\(c.name)」？")
             }
         }
-        // Toast overlay for preset creation results
+        // Skill delete confirmation alert
+        .alert(
+            "删除 Skill",
+            isPresented: Binding(
+                get: { skillToDelete != nil },
+                set: { if !$0 { skillToDelete = nil } }
+            )
+        ) {
+            Button("取消", role: .cancel) { skillToDelete = nil }
+            Button("删除", role: .destructive) {
+                if let s = skillToDelete {
+                    Task { await viewModel.deleteSkill(s) }
+                    skillToDelete = nil
+                }
+            }
+        } message: {
+            if let s = skillToDelete {
+                Text("确定删除「\(s.name.isEmpty ? s.id : s.name)」？")
+            }
+        }
+        // Toast overlay for operation results
         .overlay(alignment: .top) {
-            if let toast = viewModel.presetToast {
+            if let toast = viewModel.toast {
                 ToastBanner(toast: toast) {
                     withAnimation(Animation.normal) {
-                        viewModel.presetToast = nil
+                        viewModel.toast = nil
                     }
                 }
                 .padding(.top, Spacing.lg)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
-        .animation(Animation.normal, value: viewModel.presetToast)
+        .animation(Animation.normal, value: viewModel.toast)
     }
 
     // MARK: - Edit Sheet Container
@@ -509,7 +532,349 @@ struct SettingsPage: View {
     }
 
     private var skillsSectionPlaceholder: some View {
-        sectionHeader("Skills 管理", subtitle: "Skills 仅作为 Agent 的高级提示词层使用。")
+        HStack(alignment: .top, spacing: Spacing.lg) {
+            // MARK: - Left sidebar: Agent list
+            agentSidebar
+
+            Divider()
+
+            // MARK: - Right main content
+            skillsMainContent
+        }
+        .appSheet(
+            isPresented: $viewModel.showAddSkillSheet,
+            title: "新增 Skill",
+            subtitle: "为 \(agentLabel(viewModel.selectedAgentType)) 创建新的提示词文件。",
+            maxWidth: 460,
+            onConfirm: {
+                Task { await viewModel.confirmAddSkill() }
+            },
+            confirmTitle: "创建",
+            confirmDisabled: viewModel.newSkillId.trimmingCharacters(in: .whitespaces).isEmpty
+                || viewModel.newSkillName.trimmingCharacters(in: .whitespaces).isEmpty
+                || viewModel.isCreatingSkill,
+            isLoading: viewModel.isCreatingSkill,
+            content: { addSkillForm }
+        )
+    }
+
+    // MARK: - Agent Sidebar
+
+    private var agentSidebar: some View {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+            ForEach(SettingsViewModel.agentDefs, id: \.type) { def in
+                agentSidebarButton(def)
+            }
+        }
+        .frame(width: 180, alignment: .leading)
+    }
+
+    private func agentSidebarButton(_ def: AgentDef) -> some View {
+        let isSelected = viewModel.selectedAgentType == def.type
+        let count = viewModel.agentSkillCount(def.type)
+
+        return Button {
+            viewModel.selectAgent(def.type)
+        } label: {
+            HStack(spacing: Spacing.sm) {
+                Image(systemName: def.icon)
+                    .font(.system(size: IconSize.sm))
+                    .foregroundStyle(isSelected ? Color.accent : Color.text2)
+                    .frame(width: 28, height: 28)
+                    .background(isSelected ? Color.accentLight : Color.bg2)
+                    .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+
+                Text(def.label)
+                    .font(.bodyMedium)
+                    .foregroundStyle(isSelected ? Color.text0 : Color.text1)
+                    .lineLimit(1)
+
+                Spacer()
+
+                if count > 0 {
+                    Text("\(count)")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(isSelected ? Color.accent : Color.text2)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(isSelected ? Color.accentLight : Color.bg2)
+                        .clipShape(Capsule())
+                }
+            }
+            .padding(.horizontal, Spacing.sm)
+            .padding(.vertical, Spacing.sm)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(isSelected ? Color.accentLight.opacity(0.5) : Color.clear)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Skills Main Content
+
+    private var skillsMainContent: some View {
+        VStack(alignment: .leading, spacing: Spacing.xl) {
+            // Header
+            HStack(spacing: Spacing.md) {
+                let def = SettingsViewModel.agentDefs.first { $0.type == viewModel.selectedAgentType }
+                if let def = def {
+                    Image(systemName: def.icon)
+                        .font(.system(size: IconSize.md))
+                        .foregroundStyle(Color.accent)
+                        .frame(width: 36, height: 36)
+                        .background(Color.accentLight)
+                        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
+                    Text(def.label)
+                        .font(.headingLarge)
+                        .foregroundStyle(Color.text0)
+                }
+
+                Spacer()
+
+                Button {
+                    viewModel.startAddSkill()
+                } label: {
+                    HStack(spacing: Spacing.xs) {
+                        Image(systemName: "plus")
+                            .font(.system(size: IconSize.xs))
+                        Text("新增 Skill")
+                            .font(.bodyMedium.weight(.medium))
+                    }
+                }
+                .buttonStyle(PrimaryButtonStyle())
+            }
+
+            // Skills list or empty state
+            if viewModel.currentSkills.isEmpty {
+                skillsEmptyState
+            } else {
+                VStack(spacing: Spacing.sm) {
+                    ForEach(viewModel.currentSkills) { skill in
+                        skillCard(skill)
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // MARK: - Skills Empty State
+
+    private var skillsEmptyState: some View {
+        VStack(spacing: Spacing.md) {
+            Image(systemName: "doc.text")
+                .font(.system(size: 28))
+                .foregroundStyle(Color.text3)
+            Text("暂无 Skill")
+                .font(.headingSmall)
+                .foregroundStyle(Color.text1)
+            Text("为当前 Agent 创建 Skill 文件，可自定义高级提示词来增强 Agent 的特定能力。")
+                .font(.bodySmall)
+                .foregroundStyle(Color.text2)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(Spacing.xxxl)
+        .background(Color.bgCard)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
+        .overlay(RoundedRectangle(cornerRadius: Radius.lg).stroke(Color.border0, lineWidth: 1))
+    }
+
+    // MARK: - Skill Card
+
+    private func skillCard(_ skill: Skill) -> some View {
+        let isEditing = viewModel.editingSkillId == skill.id
+        let isDeleting = viewModel.deletingSkillId == skill.id
+
+        return VStack(spacing: 0) {
+            // Header (clickable)
+            Button {
+                Task { await viewModel.toggleSkillEdit(skill) }
+            } label: {
+                HStack(spacing: Spacing.md) {
+                    Image(systemName: "doc.text.fill")
+                        .font(.system(size: IconSize.sm))
+                        .foregroundStyle(Color.accent)
+                        .frame(width: 32, height: 32)
+                        .background(Color.accentLight)
+                        .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(skill.name.isEmpty ? skill.id : skill.name)
+                            .font(.labelMedium)
+                            .foregroundStyle(Color.text0)
+                        if !skill.description.isEmpty {
+                            Text(skill.description)
+                                .font(.labelSmall)
+                                .foregroundStyle(Color.text2)
+                                .lineLimit(1)
+                        }
+                    }
+
+                    Spacer()
+
+                    // Delete button
+                    Button {
+                        if isDeleting { return }
+                        skillToDelete = skill
+                    } label: {
+                        if isDeleting {
+                            ProgressView()
+                                .controlSize(.small)
+                                .frame(width: 20, height: 20)
+                        } else {
+                            Image(systemName: "trash")
+                                .font(.system(size: IconSize.xs))
+                        }
+                    }
+                    .buttonStyle(IconButtonStyle())
+                    .disabled(isDeleting)
+
+                    // Chevron
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: IconSize.xs, weight: .medium))
+                        .foregroundStyle(Color.text3)
+                        .rotationEffect(.degrees(isEditing ? 180 : 0))
+                        .animation(Animation.normal, value: isEditing)
+                }
+                .padding(.horizontal, Spacing.lg)
+                .padding(.vertical, Spacing.md)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            // Expanded content
+            if isEditing {
+                Divider().padding(.horizontal, Spacing.lg)
+
+                skillEditBody(skill)
+                    .padding(.horizontal, Spacing.lg)
+                    .padding(.bottom, Spacing.lg)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .background(Color.bgCard)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
+        .overlay(RoundedRectangle(cornerRadius: Radius.lg).stroke(Color.border0, lineWidth: 1))
+        .cardShadow()
+    }
+
+    // MARK: - Skill Edit Body
+
+    private func skillEditBody(_ skill: Skill) -> some View {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            // Text editor
+            ZStack(alignment: .topLeading) {
+                if viewModel.skillContent.isEmpty {
+                    Text("Skill 提示词内容...")
+                        .font(.bodyMedium)
+                        .foregroundStyle(Color.text3)
+                        .padding(.horizontal, Spacing.sm)
+                        .padding(.vertical, Spacing.md)
+                }
+                TextEditor(text: $viewModel.skillContent)
+                    .font(.monoSmall)
+                    .foregroundStyle(Color.text0)
+                    .scrollContentBackground(.hidden)
+                    .padding(Spacing.xs)
+                    .frame(minHeight: 200)
+            }
+            .background(Color.bg1)
+            .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+            .overlay(RoundedRectangle(cornerRadius: Radius.sm).stroke(Color.border0, lineWidth: 1))
+
+            // Footer: path hint + save status + button
+            HStack(spacing: Spacing.sm) {
+                Text("skills/\(skill.id).md")
+                    .font(.monoSmall)
+                    .foregroundStyle(Color.text3)
+
+                Spacer()
+
+                // Saved indicator
+                if viewModel.skillSavedId == skill.id {
+                    HStack(spacing: Spacing.xs) {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: IconSize.xs))
+                        Text("已保存")
+                            .font(.labelSmall)
+                    }
+                    .foregroundStyle(Color.statusSuccess)
+                }
+
+                // Save button
+                Button {
+                    Task { await viewModel.saveSkillContent() }
+                } label: {
+                    HStack(spacing: Spacing.xs) {
+                        if viewModel.isSkillSaving {
+                            ProgressView()
+                                .controlSize(.small)
+                        }
+                        Text("保存")
+                    }
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                .disabled(viewModel.isSkillSaving)
+            }
+        }
+    }
+
+    // MARK: - Add Skill Form
+
+    private var addSkillForm: some View {
+        VStack(alignment: .leading, spacing: Spacing.lg) {
+            // 验证错误提示
+            if let validationError = viewModel.skillValidationError {
+                HStack(spacing: Spacing.sm) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: IconSize.sm))
+                        .foregroundStyle(Color.statusError)
+                    Text(validationError)
+                        .font(.bodySmall)
+                        .foregroundStyle(Color.statusError)
+                }
+                .padding(Spacing.md)
+                .background(Color.statusErrorLight)
+                .clipShape(RoundedRectangle(cornerRadius: Radius.sm))
+            }
+
+            VStack(alignment: .leading, spacing: Spacing.xs) {
+                Text("Skill ID")
+                    .font(.labelMedium)
+                    .foregroundStyle(Color.text1)
+                TextField("my_skill", text: $viewModel.newSkillId)
+                    .textFieldStyle(AppTextFieldStyle())
+                Text("仅支持字母、数字、下划线和中划线")
+                    .font(.labelSmall)
+                    .foregroundStyle(Color.text3)
+            }
+
+            VStack(alignment: .leading, spacing: Spacing.xs) {
+                Text("名称")
+                    .font(.labelMedium)
+                    .foregroundStyle(Color.text1)
+                TextField("Skill 名称", text: $viewModel.newSkillName)
+                    .textFieldStyle(AppTextFieldStyle())
+            }
+
+            VStack(alignment: .leading, spacing: Spacing.xs) {
+                Text("描述")
+                    .font(.labelMedium)
+                    .foregroundStyle(Color.text1)
+                TextField("简要描述用途", text: $viewModel.newSkillDescription)
+                    .textFieldStyle(AppTextFieldStyle())
+            }
+        }
+        // 输入变化时清除验证错误
+        .onChange(of: viewModel.newSkillId) { _, _ in viewModel.skillValidationError = nil }
+        .onChange(of: viewModel.newSkillName) { _, _ in viewModel.skillValidationError = nil }
+    }
+
+    // MARK: - Helpers
+
+    private func agentLabel(_ type: String) -> String {
+        SettingsViewModel.agentDefs.first { $0.type == type }?.label ?? type
     }
 }
 

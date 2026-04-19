@@ -63,6 +63,17 @@
 		AA00004C /* AgentCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004C /* AgentCardList.swift */; };
 		AA00004D /* RawContentPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004D /* RawContentPanel.swift */; };
 		AA00004E /* RewritePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004E /* RewritePanel.swift */; };
+		AA00004F /* ExtractPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10004F /* ExtractPanel.swift */; };
+		AA000050 /* VoiceAssignPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100050 /* VoiceAssignPanel.swift */; };
+		AA000051 /* StoryboardPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100051 /* StoryboardPanel.swift */; };
+		AA000052 /* ProductionPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100052 /* ProductionPanel.swift */; };
+		AA000053 /* CharacterImageTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100053 /* CharacterImageTab.swift */; };
+		AA000054 /* SceneImageTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100054 /* SceneImageTab.swift */; };
+		AA000055 /* DubbingTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100055 /* DubbingTab.swift */; };
+		AA000056 /* ShotImageTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100056 /* ShotImageTab.swift */; };
+		AA000057 /* VideoGenTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100057 /* VideoGenTab.swift */; };
+		AA000058 /* VideoComposeTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100058 /* VideoComposeTab.swift */; };
+		AA000059 /* InlineAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100059 /* InlineAsyncImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,7 +143,18 @@
 		AA10004C /* AgentCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentCardList.swift; sourceTree = "<group>"; };
 		AA10004D /* RawContentPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawContentPanel.swift; sourceTree = "<group>"; };
 		AA10004E /* RewritePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewritePanel.swift; sourceTree = "<group>"; };
-		AA100050 /* HuobaoDramaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HuobaoDramaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA10004F /* ExtractPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtractPanel.swift; sourceTree = "<group>"; };
+		AA100050 /* VoiceAssignPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceAssignPanel.swift; sourceTree = "<group>"; };
+		AA100051 /* StoryboardPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardPanel.swift; sourceTree = "<group>"; };
+		AA100052 /* ProductionPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductionPanel.swift; sourceTree = "<group>"; };
+		AA100053 /* CharacterImageTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterImageTab.swift; sourceTree = "<group>"; };
+		AA100054 /* SceneImageTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneImageTab.swift; sourceTree = "<group>"; };
+		AA100055 /* DubbingTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DubbingTab.swift; sourceTree = "<group>"; };
+		AA100056 /* ShotImageTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotImageTab.swift; sourceTree = "<group>"; };
+		AA100057 /* VideoGenTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGenTab.swift; sourceTree = "<group>"; };
+		AA100058 /* VideoComposeTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoComposeTab.swift; sourceTree = "<group>"; };
+		AA100059 /* InlineAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAsyncImage.swift; sourceTree = "<group>"; };
+		AA100060 /* HuobaoDramaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HuobaoDramaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,7 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				AA100000 /* HuobaoDrama.app */,
-				AA100050 /* HuobaoDramaTests.xctest */,
+				AA100060 /* HuobaoDramaTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -286,6 +308,7 @@
 				AA100037 /* StepBubbleBar.swift */,
 				AA100038 /* ModalSheet.swift */,
 				AA10004B /* ToastBanner.swift */,
+				AA100059 /* InlineAsyncImage.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -325,6 +348,16 @@
 				AA10004A /* ScriptPanel.swift */,
 				AA10004D /* RawContentPanel.swift */,
 				AA10004E /* RewritePanel.swift */,
+				AA10004F /* ExtractPanel.swift */,
+				AA100050 /* VoiceAssignPanel.swift */,
+				AA100051 /* StoryboardPanel.swift */,
+				AA100052 /* ProductionPanel.swift */,
+				AA100053 /* CharacterImageTab.swift */,
+				AA100054 /* SceneImageTab.swift */,
+				AA100055 /* DubbingTab.swift */,
+				AA100056 /* ShotImageTab.swift */,
+				AA100057 /* VideoGenTab.swift */,
+				AA100058 /* VideoComposeTab.swift */,
 			);
 			path = Studio;
 			sourceTree = "<group>";
@@ -371,7 +404,7 @@
 			);
 			name = HuobaoDramaTests;
 			productName = HuobaoDramaTests;
-			productReference = AA100050 /* HuobaoDramaTests.xctest */;
+			productReference = AA100060 /* HuobaoDramaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -482,6 +515,17 @@
 					AA00004C /* AgentCardList.swift in Sources */,
 				AA00004D /* RawContentPanel.swift in Sources */,
 				AA00004E /* RewritePanel.swift in Sources */,
+				AA00004F /* ExtractPanel.swift in Sources */,
+				AA000050 /* VoiceAssignPanel.swift in Sources */,
+				AA000051 /* StoryboardPanel.swift in Sources */,
+				AA000052 /* ProductionPanel.swift in Sources */,
+				AA000053 /* CharacterImageTab.swift in Sources */,
+				AA000054 /* SceneImageTab.swift in Sources */,
+				AA000055 /* DubbingTab.swift in Sources */,
+				AA000056 /* ShotImageTab.swift in Sources */,
+				AA000057 /* VideoGenTab.swift in Sources */,
+				AA000058 /* VideoComposeTab.swift in Sources */,
+				AA000059 /* InlineAsyncImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

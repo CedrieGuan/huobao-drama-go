@@ -9,11 +9,15 @@
 // RegisterTTSAdapter, typically from an init() function in each adapter file.
 package adapter
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 // ========== Adapter registries ==========
 
 var (
+	registryMu    sync.RWMutex
 	imageAdapters = make(map[string]ImageProviderAdapter)
 	videoAdapters = make(map[string]VideoProviderAdapter)
 	ttsAdapters   = make(map[string]TTSProviderAdapter)
@@ -35,6 +39,8 @@ var displayName = map[string]string{
 
 // RegisterImageAdapter registers an image generation adapter under the given name.
 func RegisterImageAdapter(name string, adp ImageProviderAdapter) {
+	registryMu.Lock()
+	defer registryMu.Unlock()
 	if _, exists := imageAdapters[name]; exists {
 		panic(fmt.Sprintf("adapter: image adapter already registered: %s", name))
 	}
@@ -43,6 +49,8 @@ func RegisterImageAdapter(name string, adp ImageProviderAdapter) {
 
 // RegisterVideoAdapter registers a video generation adapter under the given name.
 func RegisterVideoAdapter(name string, adp VideoProviderAdapter) {
+	registryMu.Lock()
+	defer registryMu.Unlock()
 	if _, exists := videoAdapters[name]; exists {
 		panic(fmt.Sprintf("adapter: video adapter already registered: %s", name))
 	}
@@ -51,6 +59,8 @@ func RegisterVideoAdapter(name string, adp VideoProviderAdapter) {
 
 // RegisterTTSAdapter registers a TTS adapter under the given name.
 func RegisterTTSAdapter(name string, adp TTSProviderAdapter) {
+	registryMu.Lock()
+	defer registryMu.Unlock()
 	if _, exists := ttsAdapters[name]; exists {
 		panic(fmt.Sprintf("adapter: tts adapter already registered: %s", name))
 	}
@@ -62,6 +72,8 @@ func RegisterTTSAdapter(name string, adp TTSProviderAdapter) {
 // GetImageAdapter returns the image adapter for the given provider.
 // Unknown providers fall back to "minimax".
 func GetImageAdapter(provider string) ImageProviderAdapter {
+	registryMu.RLock()
+	defer registryMu.RUnlock()
 	if adp, ok := imageAdapters[provider]; ok {
 		return adp
 	}
@@ -74,6 +86,8 @@ func GetImageAdapter(provider string) ImageProviderAdapter {
 // GetVideoAdapter returns the video adapter for the given provider.
 // Unknown providers fall back to "minimax".
 func GetVideoAdapter(provider string) VideoProviderAdapter {
+	registryMu.RLock()
+	defer registryMu.RUnlock()
 	if adp, ok := videoAdapters[provider]; ok {
 		return adp
 	}
@@ -86,6 +100,8 @@ func GetVideoAdapter(provider string) VideoProviderAdapter {
 // GetTTSAdapter returns the TTS adapter for the given provider.
 // Unknown providers fall back to "minimax".
 func GetTTSAdapter(provider string) TTSProviderAdapter {
+	registryMu.RLock()
+	defer registryMu.RUnlock()
 	if adp, ok := ttsAdapters[provider]; ok {
 		return adp
 	}
@@ -101,6 +117,9 @@ func GetTTSAdapter(provider string) TTSProviderAdapter {
 //
 // Used by the AI Providers list API to enumerate available services.
 func GetProviderList() []map[string]interface{} {
+	registryMu.RLock()
+	defer registryMu.RUnlock()
+
 	// Collect unique provider names while preserving insertion order.
 	type entry struct{ name, serviceType string }
 	var entries []entry

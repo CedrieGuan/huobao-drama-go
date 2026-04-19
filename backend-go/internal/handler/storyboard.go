@@ -238,30 +238,38 @@ func (h *Handler) DeleteStoryboard(c *gin.Context) {
 // storyboard ID, then inserts new rows for each provided character ID.
 // Duplicate and zero IDs are filtered out.
 func (h *Handler) syncStoryboardCharacters(storyboardID int, characterIDs []int) {
-	// Delete existing associations.
-	h.DB.Where("storyboard_id = ?", storyboardID).Delete(&database.StoryboardCharacter{})
-
-	// Deduplicate and filter zero IDs.
-	seen := make(map[int]bool, len(characterIDs))
-	unique := make([]int, 0, len(characterIDs))
-	for _, cid := range characterIDs {
-		if cid > 0 && !seen[cid] {
-			seen[cid] = true
-			unique = append(unique, cid)
+	err := h.DB.Transaction(func(tx *gorm.DB) error {
+		// Delete existing associations.
+		if err := tx.Where("storyboard_id = ?", storyboardID).Delete(&database.StoryboardCharacter{}).Error; err != nil {
+			return err
 		}
-	}
 
-	if len(unique) == 0 {
-		return
-	}
-
-	// Insert new associations.
-	for _, cid := range unique {
-		link := database.StoryboardCharacter{
-			StoryboardID: storyboardID,
-			CharacterID:  cid,
+		// Deduplicate and filter zero IDs.
+		seen := make(map[int]bool, len(characterIDs))
+		unique := make([]int, 0, len(characterIDs))
+		for _, cid := range characterIDs {
+			if cid > 0 && !seen[cid] {
+				seen[cid] = true
+				unique = append(unique, cid)
+			}
 		}
-		h.DB.Create(&link)
+
+		if len(unique) == 0 {
+			return nil
+		}
+
+		// Batch insert new associations.
+		links := make([]database.StoryboardCharacter, 0, len(unique))
+		for _, cid := range unique {
+			links = append(links, database.StoryboardCharacter{
+				StoryboardID: storyboardID,
+				CharacterID:  cid,
+			})
+		}
+		return tx.Create(&links).Error
+	})
+	if err != nil {
+		_ = err // log in production
 	}
 }
 

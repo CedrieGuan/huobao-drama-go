@@ -44,6 +44,14 @@ struct RewritePanel: View {
                     .monospacedDigit()
             }
 
+            // Error feedback from rewrite
+            if let error = viewModel.rewriteError {
+                Text(error)
+                    .font(.labelSmall)
+                    .foregroundStyle(Color.statusError)
+                    .lineLimit(1)
+            }
+
             // Save feedback
             if viewModel.isSavingRewrite {
                 ProgressView()
@@ -63,6 +71,21 @@ struct RewritePanel: View {
                     .font(.labelSmall)
                     .foregroundStyle(Color.statusError)
                     .lineLimit(1)
+            }
+
+            // Rewrite again button (when content exists and not currently rewriting)
+            if hasContent && !viewModel.isRewriting {
+                Button {
+                    Task { await viewModel.rewriteAgain() }
+                } label: {
+                    HStack(spacing: Spacing.xs) {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: IconSize.xs, weight: .medium))
+                        Text("重新改写")
+                            .font(.bodySmall.weight(.medium))
+                    }
+                }
+                .buttonStyle(SecondaryButtonStyle())
             }
 
             // Save button (only when there is editable content and changes)
@@ -131,10 +154,10 @@ struct RewritePanel: View {
                 .frame(maxWidth: 360)
                 .lineSpacing(2)
 
-            // Action buttons (E6.2 will wire these up)
+            // Action buttons
             HStack(spacing: Spacing.md) {
                 Button {
-                    // TODO: E6.2 - trigger AI rewrite
+                    Task { await viewModel.runRewrite() }
                 } label: {
                     HStack(spacing: Spacing.xs) {
                         Image(systemName: "bolt.fill")
@@ -144,9 +167,10 @@ struct RewritePanel: View {
                     }
                 }
                 .buttonStyle(PrimaryButtonStyle())
+                .disabled(!viewModel.hasRawContent)
 
                 Button {
-                    // TODO: E6.2 - skip rewrite
+                    Task { await viewModel.skipRewrite() }
                 } label: {
                     HStack(spacing: Spacing.xs) {
                         Image(systemName: "forward.end")
@@ -156,6 +180,7 @@ struct RewritePanel: View {
                     }
                 }
                 .buttonStyle(SecondaryButtonStyle())
+                .disabled(!viewModel.hasRawContent)
             }
 
             // Prerequisite hint

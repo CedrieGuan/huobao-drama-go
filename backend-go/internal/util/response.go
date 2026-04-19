@@ -3,6 +3,7 @@
 package util
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -51,10 +52,13 @@ func NotFound(c *gin.Context, msg string) {
 	})
 }
 
-// ServerError responds with HTTP 500 and an error message.
-func ServerError(c *gin.Context, msg string) {
+// ServerError responds with HTTP 500 with a generic message.
+// The internal error is logged server-side but never exposed to the client
+// to avoid leaking database details, stack traces, or file paths.
+func ServerError(c *gin.Context, internalErr string) {
+	log.Printf("[handler] 500 %s %s: %s", c.Request.Method, c.Request.URL.Path, internalErr)
 	c.JSON(http.StatusInternalServerError, APIResponse{
 		Code:    500,
-		Message: msg,
+		Message: "服务器内部错误，请稍后重试",
 	})
 }
