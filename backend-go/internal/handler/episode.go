@@ -90,13 +90,24 @@ func (h *Handler) CreateEpisode(c *gin.Context) {
 		return
 	}
 
-	util.Success(c, gin.H{
-		"id":              episode.ID,
-		"episode_number":  episode.EpisodeNumber,
-		"title":           episode.Title,
-		"image_config_id": episode.ImageConfigID,
-		"video_config_id": episode.VideoConfigID,
-		"audio_config_id": episode.AudioConfigID,
+	// Return full episode data so Swift Episode model can decode all required fields.
+	util.Created(c, gin.H{
+		"id":               episode.ID,
+		"drama_id":         episode.DramaID,
+		"episode_number":   episode.EpisodeNumber,
+		"title":            episode.Title,
+		"content":          episode.Content,
+		"script_content":   episode.ScriptContent,
+		"description":      episode.Description,
+		"duration":         episode.Duration,
+		"status":           episode.Status,
+		"video_url":        episode.VideoURL,
+		"thumbnail":        episode.Thumbnail,
+		"image_config_id":  episode.ImageConfigID,
+		"video_config_id":  episode.VideoConfigID,
+		"audio_config_id":  episode.AudioConfigID,
+		"created_at":       episode.CreatedAt,
+		"updated_at":       episode.UpdatedAt,
 	})
 }
 

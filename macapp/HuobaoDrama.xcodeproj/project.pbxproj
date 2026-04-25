@@ -74,6 +74,8 @@
 		AA000057 /* VideoGenTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100057 /* VideoGenTab.swift */; };
 		AA000058 /* VideoComposeTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100058 /* VideoComposeTab.swift */; };
 		AA000059 /* InlineAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100059 /* InlineAsyncImage.swift */; };
+		AA000070 /* CRUDSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100070 /* CRUDSmokeTests.swift */; };
+		AA000071 /* ExportPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100071 /* ExportPanel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -155,6 +157,8 @@
 		AA100058 /* VideoComposeTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoComposeTab.swift; sourceTree = "<group>"; };
 		AA100059 /* InlineAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAsyncImage.swift; sourceTree = "<group>"; };
 		AA100060 /* HuobaoDramaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HuobaoDramaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA100070 /* CRUDSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRUDSmokeTests.swift; sourceTree = "<group>"; };
+		AA100071 /* ExportPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPanel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -358,6 +362,7 @@
 				AA100056 /* ShotImageTab.swift */,
 				AA100057 /* VideoGenTab.swift */,
 				AA100058 /* VideoComposeTab.swift */,
+				AA100071 /* ExportPanel.swift */,
 			);
 			path = Studio;
 			sourceTree = "<group>";
@@ -366,6 +371,7 @@
 			isa = PBXGroup;
 			children = (
 				AA100039 /* ModelDecodingTests.swift */,
+				AA100070 /* CRUDSmokeTests.swift */,
 			);
 			path = HuobaoDrama/HuobaoDramaTests;
 			sourceTree = "<group>";
@@ -526,6 +532,7 @@
 				AA000057 /* VideoGenTab.swift in Sources */,
 				AA000058 /* VideoComposeTab.swift in Sources */,
 				AA000059 /* InlineAsyncImage.swift in Sources */,
+				AA000071 /* ExportPanel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,6 +541,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA000039 /* ModelDecodingTests.swift in Sources */,
+				AA000070 /* CRUDSmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

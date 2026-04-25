@@ -13,7 +13,7 @@ final class ConnectionSettingsStore {
     }
 
     private init() {
-        baseURL = defaults.string(forKey: "huobao_backend_base_url") ?? "http://localhost:5679"
+        baseURL = defaults.string(forKey: "huobao_backend_base_url") ?? "http://localhost:5680"
     }
 
     var apiBaseURL: String { baseURL.trimmingCharacters(in: .init(charactersIn: "/")) + "/api/v1" }

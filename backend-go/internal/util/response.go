@@ -5,6 +5,7 @@ package util
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -61,4 +62,10 @@ func ServerError(c *gin.Context, internalErr string) {
 		Code:    500,
 		Message: "服务器内部错误，请稍后重试",
 	})
+}
+
+// TimestampMillis returns the current Unix timestamp in milliseconds.
+// Used for generating unique upload filenames.
+func TimestampMillis() int64 {
+	return time.Now().UnixMilli()
 }

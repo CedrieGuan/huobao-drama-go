@@ -1,6 +1,6 @@
 import Foundation
 
-struct Character: Codable, Identifiable, Sendable {
+struct Character: Codable, Identifiable, Sendable, Equatable {
     let id: Int
     var dramaId: Int
     var name: String

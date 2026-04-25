@@ -1,6 +1,6 @@
 import Foundation
 
-struct Storyboard: Codable, Identifiable, Sendable {
+struct Storyboard: Codable, Identifiable, Sendable, Equatable {
     let id: Int
     var episodeId: Int
     var sceneId: Int?

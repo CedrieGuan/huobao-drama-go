@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import AVKit
 
 // MARK: - ExportPanel
 
@@ -239,7 +240,8 @@ struct ExportPanel: View {
             }
         }
         .padding(Spacing.lg)
-        .frame(width: 420, maxHeight: .infinity)
+        .frame(maxHeight: .infinity)
+        .frame(width: 420)
         .background(Color.bgCard)
         .clipShape(RoundedRectangle(cornerRadius: Radius.lg))
         .cardShadow()
